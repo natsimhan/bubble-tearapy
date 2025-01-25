@@ -24,11 +24,14 @@ export class Game extends Scene {
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height);
     player.setHeight(this.scale.height * .5);
 
+    this.scene.launch('Hud');
+
     this.input.on('pointerup', () => {
       const diceResult = this.rng.rollADice();
 
       if (diceResult === 1) {
-      //   this.scene.start('GameOver', {timer: 150});
+        this.scene.start('GameOver', {timer: 150});
+        this.scene.stop('Hud')
       }
     });
 
