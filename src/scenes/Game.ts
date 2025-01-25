@@ -1,5 +1,6 @@
 import {Scene} from 'phaser';
 import Rng from '../domain/Rng.ts';
+import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 
 export class Game extends Scene {
@@ -7,6 +8,7 @@ export class Game extends Scene {
 
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
+  private parallax: Parallax;
 
   constructor() {
     super('Game');
@@ -16,20 +18,18 @@ export class Game extends Scene {
   create() {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x333333);
-
-    // this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
-    // this.background.setAlpha(0.5).setScale(this.scale.width / this.background.width, this.scale.height / this.background.height);
+    this.parallax = new Parallax(this);
 
 
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height);
     player.setHeight(this.scale.height * .5);
 
     this.input.on('pointerup', () => {
-      // const diceResult = this.rng.rollADice();
+      const diceResult = this.rng.rollADice();
 
-      // if (diceResult === 1) {
-      //   this.scene.start('GameOver');
-      // }
+      if (diceResult === 1) {
+      //   this.scene.start('GameOver', {timer: 150});
+      }
     });
 
 
@@ -56,6 +56,10 @@ export class Game extends Scene {
           break;
       }
     });
+  }
+
+  update(): void {
+    this.parallax.update();
   }
 
 }

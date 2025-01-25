@@ -31,6 +31,10 @@ export const TextureKey = {
     timer_background_blue: 'timer_background_blue_v1',
     timer_background_pink: 'timer_background_pink_v1',
     timer_background_purple: 'timer_background_purple_v1',
+  },
+  background: {
+    bg1: 'parallax_bg2',
+    bg2: 'parallax_bg1',
   }
 };
 
@@ -57,6 +61,7 @@ export class Preloader extends Scene {
     this.preloadPlayer();
     this.preloadBubbleTea();
     this.preloadHud();
+    this.preloadParallaxBackground();
   }
 
   create() {
@@ -106,5 +111,13 @@ export class Preloader extends Scene {
     for (const imgKey of listKey) {
       this.load.image(imgKey, `${subpath}/${imgKey}.png`);
     }
+  }
+
+
+  private preloadParallaxBackground(): void {
+    this.preloadFromListKey([
+      TextureKey.background.bg1,
+      TextureKey.background.bg2,
+    ], 'background');
   }
 }

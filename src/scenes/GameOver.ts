@@ -5,9 +5,14 @@ export class GameOver extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   gameover_text: Phaser.GameObjects.Text;
+  private timer!: number;
 
   constructor() {
     super('GameOver');
+  }
+
+  init(data: { timer: any; }): void {
+    this.timer = data.timer;
   }
 
   create() {
@@ -27,9 +32,17 @@ export class GameOver extends Scene {
     this.input.once('pointerdown', () => {
       const randomName = this.generateRandomName();
       const randomTime = this.generateRandomTime();
-      this.saveScoreToLeaderboard(randomName, randomTime);
 
-      this.scene.start('MainMenu');
+      const leaderboardScene = this.scene.get('Leaderboard') as Leaderboard;
+      if (leaderboardScene && leaderboardScene.isInTop10(randomTime)) {
+        this.promptForName((name: string) => {
+          this.saveScoreToLeaderboard(name, randomTime);
+          this.scene.start('MainMenu');
+        });
+      } else {
+        this.saveScoreToLeaderboard(randomName, randomTime);
+        this.scene.start('MainMenu');
+      }
     });
   }
 
@@ -49,5 +62,27 @@ export class GameOver extends Scene {
     const minTime = 5;
     const maxTime = 3000;
     return Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+  }
+
+  promptForName(callback: (name: string) => void) {
+    //todo A voir pour peux etre enregistré le player session car du coup a chque fois il va redemander de mettre un pseudo
+    // un peu de css sera a faire pour l'input et le button
+    const nameInput = this.add.dom(this.scale.width / 2, this.scale.height / 2).createFromHTML(`
+      <div style="position: absolute; z-index: 10; display: flex; justify-content: center; align-items: center;">
+        <input type="text" id="name-input" placeholder="Enter your name" style="font-size: 32px; padding: 5px; width: 300px;" />
+        <button id="submit-button" style="font-size: 32px; margin-top: 10px;">Submit</button>
+      </div>
+    `);
+
+    const button = nameInput.node.querySelector('#submit-button') as HTMLButtonElement;
+    const inputField = nameInput.node.querySelector('#name-input') as HTMLInputElement;
+
+    button.addEventListener('click', () => {
+      const enteredName = inputField.value.trim() || 'Player';
+      callback(enteredName);
+      nameInput.setVisible(false);
+    });
+
+    nameInput.setDepth(20);
   }
 }

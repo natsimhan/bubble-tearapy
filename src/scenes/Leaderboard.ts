@@ -67,4 +67,9 @@ export default class Leaderboard extends Scene {
     const seconds = Math.floor(sec % 60);
     return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
   }
+
+  isInTop10(timeInSec: number): boolean {
+    const scores = this.loadScores();
+    return scores.length < 10 || timeInSec < scores[scores.length - 1].timeInSec;
+  }
 }
