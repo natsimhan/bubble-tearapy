@@ -1,6 +1,6 @@
 import {Scene, Sound} from 'phaser';
 import Rng from '../domain/Rng.ts';
-import ColorableArea from '../components/ColorableArea.ts';
+import ColorableArea from '../components/Colorable/ColorableArea.ts';
 import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 
@@ -35,8 +35,7 @@ export class Game extends Scene {
 
     this.scene.launch('Hud');
 
-this.areaTest = new ColorableArea(this, 500, 300);
-this.areaTest.create();
+    this.areaTest = new ColorableArea(this, 500, 300);
 
     this.input.on('pointerup', () => {
       const diceResult = this.rng.rollADice();

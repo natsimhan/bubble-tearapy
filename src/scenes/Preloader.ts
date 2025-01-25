@@ -25,6 +25,10 @@ export const TextureKey = {
     player_leg_right_up: 'player_leg_right_up',
     sarbapaille: 'sarbapaille',
   },
+  decor: {
+    facade: 'facade',
+    roof: 'roof',
+  },
   hud: {
     progress_bar_background_blue: 'progress_bar_background_blue_v2',
     progress_bar_background_green: 'progress_bar_background_green_v2',
@@ -61,13 +65,12 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
     this.load.atlas(TextureKey.button, 'button/nine-slice.png', 'button/nine-slice.json');
     this.load.image('logo', 'logo.png');
-    this.load.image('facade', 'facade.png')
-    this.load.image('roof', 'roof.png')
     this.preloadLogo();
     this.preloadPlayer();
     this.preloadBubbleTea();
     this.preloadHud();
     this.preloadParallaxBackground();
+    this.preloadDecor();
   }
 
   create() {
@@ -117,6 +120,13 @@ export class Preloader extends Scene {
       TextureKey.hud.timer_background_pink,
       TextureKey.hud.timer_background_purple,
     ], 'hud');
+  }
+
+  private preloadDecor() {
+    this.preloadFromListKey([
+        TextureKey.decor.facade,
+        TextureKey.decor.roof,
+    ], 'decor');
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {
