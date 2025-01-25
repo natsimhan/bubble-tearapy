@@ -13,8 +13,8 @@ import Intro from './scenes/Intro.ts';
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 1024,
-  height: 768,
+  width: window.innerWidth,
+  height: window.innerHeight,
   parent: 'game-container',
   backgroundColor: '#028af8',
   scale: {

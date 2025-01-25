@@ -13,7 +13,8 @@ export default class BubbleTea {
     this.teaImage = this.scene.add.image(0, 0, TextureKey.bubbletea.bubbletea).setOrigin(.5, 1);
     this.cupImage = this.scene.add.image(0, 0, TextureKey.bubbletea.cup).setOrigin(.5, 1);
     this.coverImage = this.scene.add.image(0, 0, TextureKey.bubbletea.cup_cover).setOrigin(.5, 0.5);
-    this.coverImage.setActive(withCover);
+    this.coverImage.setAlpha(withCover ? 1 : 0);
+
     this.maskImage = this.scene.make.image({
       x: 0,
       y: 0,
