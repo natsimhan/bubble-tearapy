@@ -18,15 +18,30 @@ export default class Leaderboard extends Scene {
   create() {
     this.width = this.scale.width;
     this.height = this.scale.height;
-    this.displayLeaderboard();
+
+    const randomTime = this.registry.get('timer');
+
+    if (this.isInTop10(randomTime)) {
+      this.promptForName((name: string) => {
+        this.saveScoreToLeaderboard(name, randomTime);
+      });
+    } else {
+      this.displayLeaderboard();
+    }
+
+  }
+
+  saveScoreToLeaderboard(name: string, timeInMs: number) {
+    this.saveScore(name, timeInMs);
+  }
+
+  displayLeaderboard(): void {
     const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []);
     this.add.existing(mainMenuButton);
     mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
-  }
 
-  displayLeaderboard(): void {
     const scores: ScoreType[] = this.loadScores();
 
     const title = this.add.text(this.width / 2, (this.height) / 10, 'Leaderboard', {
@@ -60,6 +75,7 @@ export default class Leaderboard extends Scene {
       }
       localStorage.setItem('leaderboard', JSON.stringify(scores));
     }
+    this.displayLeaderboard();
   }
 
   formatTime(sec: number): string {
@@ -71,5 +87,44 @@ export default class Leaderboard extends Scene {
   isInTop10(timeInSec: number): boolean {
     const scores = this.loadScores();
     return scores.length < 10 || timeInSec < scores[scores.length - 1].timeInSec;
+  }
+
+  promptForName(callback: (name: string) => void) {
+    //todo A voir pour peux etre enregistré le player session car du coup a chque fois il va redemander de mettre un pseudo
+
+    const width = this.scale.width;
+    const height = this.scale.height;
+
+    // Créer un input DOM temporaire
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Your name';
+    input.style.position = 'absolute';
+    input.style.left = `${(width) / 2}px`; // Centrer horizontalement
+    input.style.top = `${(2 * height) / 5}px`; // Position verticale
+    input.style.zIndex = String(10);
+    document.body.appendChild(input);
+
+    // Créer les boutons
+    const submitButton = new Button(this, (width) / 2, (2 * height) / 3.5, 'Submit', []);
+    this.add.existing(submitButton);
+
+    const skipButton = new Button(this, (width) / 2, (2 * height) / 2.5, 'Continue without submitting', []);
+    this.add.existing(skipButton);
+
+    submitButton.onClickButton('pointerup', () => {
+      const enteredName = input.value.trim() || 'Player';
+      callback(enteredName);
+      input.remove(); // Retirer l'input DOM
+      submitButton.setVisible(false);
+      skipButton.setVisible(false);
+    });
+
+    skipButton.onClickButton('pointerup', () => {
+      this.displayLeaderboard();
+      input.remove(); // Retirer l'input DOM
+      submitButton.setVisible(false);
+      skipButton.setVisible(false);
+    });
   }
 }
