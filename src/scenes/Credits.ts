@@ -1,4 +1,4 @@
-import {Scene} from "phaser";
+import {Scene, Sound} from "phaser";
 import Button from "../components/Button.ts";
 
 interface CreditsDataType {
@@ -11,6 +11,7 @@ const PADDING: number = 50;
 
 export default class Credits extends Scene {
 
+  music: Sound.BaseSound;
   creditsData: CreditsDataType[];
 
   constructor() {
@@ -27,9 +28,16 @@ export default class Credits extends Scene {
     ];
   }
 
-  create(): void {
+  preload() {
+    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
+  }
+
+  create() {
     const width = this.scale.width;
     const height = this.scale.height;
+
+    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music.play();
 
     this.creditsData.map((credit: CreditsDataType, index: number) => {
       const creditText = `${credit.name} - ${credit.role}`;
@@ -47,9 +55,12 @@ export default class Credits extends Scene {
       this.add.existing(text);
     });
 
-    const mainMenuButton = new Button(this, width / 2, (9 * height) / 10, 'main menu', []);
+    const mainMenuButton = new Button(this, width / 2, (3 * height) / 4, 'main menu', []);
     this.add.existing(mainMenuButton);
-    mainMenuButton.onClickButton('pointerup', () => {
+    mainMenuButton.on('pointerup', () => {
+      this.events.once('shutdown', () => {
+        this.music.stop();
+      });
       this.scene.start('MainMenu');
     });
   }

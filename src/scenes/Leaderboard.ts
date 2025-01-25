@@ -1,4 +1,4 @@
-import {Scene} from 'phaser';
+import {Scene, Sound} from 'phaser';
 import Button from '../components/Button.ts';
 
 interface ScoreType {
@@ -8,6 +8,8 @@ interface ScoreType {
 
 export default class Leaderboard extends Scene {
 
+  music: Sound.BaseSound;
+
   private width: number;
   private height: number;
 
@@ -15,11 +17,22 @@ export default class Leaderboard extends Scene {
     super('Leaderboard');
   }
 
+  preload() {
+    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
+  }
+
   create() {
     this.width = this.scale.width;
     this.height = this.scale.height;
 
+    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music.play();
+
     const randomTime = this.registry.get('timer');
+
+    this.events.once('shutdown', () => {
+      this.music.stop();
+    });
 
     if (this.isInTop10(randomTime)) {
       this.promptForName((name: string) => {
