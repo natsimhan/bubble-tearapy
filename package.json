@@ -1,0 +1,20 @@
+{
+    "name": "bubbletearapy",
+    "description": "Bring color and joy to a gray, lifeless world.",
+    "version": "1.0.0",
+    "author": "Ouebsson GGJ25 <bonjour@ouebsson.fr> (https://studio.ouebsson.fr/)",
+    "license": "CC BY-NC-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "scripts": {
+        "dev": "vite --config vite/config.dev.mjs",
+        "build": "vite build --config vite/config.prod.mjs"
+    },
+    "devDependencies": {
+        "terser": "^5.31.0",
+        "typescript": "^5.4.5",
+        "vite": "^5.3.1"
+    },
+    "dependencies": {
+        "phaser": "^3.87.0"
+    }
+}
