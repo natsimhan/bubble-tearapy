@@ -9,7 +9,7 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     this.#displayWidth = width;
     this.#displayHeight = height;
     this.setScale(this.#displayWidth / this.width, this.#displayHeight / this.height);
-    this.setOrigin(0, 1);
+    this.setOrigin(0.5, 1);
     this.scene.add.existing(this);
   }
 }

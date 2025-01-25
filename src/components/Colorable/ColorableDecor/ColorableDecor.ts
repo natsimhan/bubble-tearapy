@@ -1,4 +1,6 @@
 import ColorableDecorElement from "./ColorableDecorElement.ts";
+import * as Phaser from 'phaser';
+import Rectangle = Phaser.Geom.Rectangle;
 
 export default class ColorableDecor {
 
@@ -8,6 +10,7 @@ export default class ColorableDecor {
     protected y: number;
     protected height: number;
     protected width: number;
+    protected depth: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, height: number, width: number) {
         this.scene = scene;
@@ -21,4 +24,11 @@ export default class ColorableDecor {
     createElementList(): void {
       this.elementList = [];
     }
+
+  setDpeth(depth: number) {
+    this.depth = depth;
+    this.elementList?.forEach((element) => {
+      element.setDepth(depth);
+    })
+  }
 }
