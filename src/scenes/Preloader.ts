@@ -61,6 +61,8 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
     this.load.atlas(TextureKey.button, 'button/nine-slice.png', 'button/nine-slice.json');
     this.load.image('logo', 'logo.png');
+    this.load.image('facade', 'facade.png')
+    this.load.image('roof', 'roof.png')
     this.preloadLogo();
     this.preloadPlayer();
     this.preloadBubbleTea();
