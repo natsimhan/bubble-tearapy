@@ -2,6 +2,9 @@ import {Scene} from 'phaser';
 
 export const TextureKey = {
   button: 'button',
+  logo: {
+    logo_bubble_teapay: 'logo_bubble_teapay',
+  },
   bubbletea: {
     bubbletea: 'bubbletea',
     cup: 'cup',
@@ -58,6 +61,7 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
     this.load.atlas(TextureKey.button, 'button/nine-slice.png', 'button/nine-slice.json');
     this.load.image('logo', 'logo.png');
+    this.preloadLogo();
     this.preloadPlayer();
     this.preloadBubbleTea();
     this.preloadHud();
@@ -66,6 +70,12 @@ export class Preloader extends Scene {
 
   create() {
     this.scene.start('Game');
+  }
+
+  private preloadLogo() {
+    this.preloadFromListKey([
+      TextureKey.logo.logo_bubble_teapay
+    ], 'logo');
   }
 
   private preloadPlayer() {

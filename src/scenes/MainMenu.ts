@@ -1,5 +1,6 @@
 import {Scene, GameObjects, Sound} from 'phaser';
 import Button from "../components/Button.ts";
+import {TextureKey} from './Preloader.ts';
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
@@ -21,7 +22,7 @@ export class MainMenu extends Scene {
     this.music = this.sound.add('main_menu', {loop: true, volume: 0.5});
     this.music.play();
 
-    this.background = this.add.image(512, 384, 'background');
+    this.cameras.main.setBackgroundColor('#fdd784');
 
     const playButton = new Button(this, width / 3, (2 * height) / 3, 'play', []);
     this.add.existing(playButton);
@@ -31,7 +32,12 @@ export class MainMenu extends Scene {
     this.add.existing(creditsButton);
     creditsButton.setPosition(width - creditsButton.width / 2, height - creditsButton.height / 2);
 
-    this.logo = this.add.image(512, 300, 'logo');
+    this.logo = this.add.image(512, 300, TextureKey.logo.logo_bubble_teapay);
+
+    playButton.setDepth(1);
+    leaderBoardButton.setDepth(1);
+    creditsButton.setDepth(1);
+    this.logo.setDepth(0);
 
     this.events.once('shutdown', () => {
       this.music.stop();
