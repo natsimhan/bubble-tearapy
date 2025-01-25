@@ -24,13 +24,13 @@ export class MainMenu extends Scene {
 
 		this.logo = this.add.image(512, 300, 'logo');
 
-		playButton.on('pointerup', () => {
+		playButton.onClickButton('pointerup', () => {
 			this.scene.start('Game');
 		});
-		leaderBoardButton.on('pointerup', () => {
+		leaderBoardButton.onClickButton('pointerup', () => {
 			this.scene.start('Leaderboard');
 		});
-		creditsButton.on('pointerup', () => {
+		creditsButton.onClickButton('pointerup', () => {
 			this.scene.start('Credits');
 		});
 	}

@@ -17,19 +17,19 @@ export default class Credits extends Scene {
     super('Credits');
     this.creditsData = [
       {name: 'Jonathan BURON', role: 'Lead & developer', color: '#FF0000'},
-      {name: 'Lucie BURON', role: 'Graphic artist', color: '#FF7F00'},
-      {name: 'Margaux RIANT', role: 'Developer', color: '#FFFF00'},
-      {name: 'Mathis VALERIO', role: 'Sound designer & Compositor', color: '#00FF00'},
-      {name: 'Melody MORTIER', role: 'Graphic & Communication', color: '#0000FF'},
-      {name: 'Romuald LE CORROLLER', role: 'Developer', color: '#4B0082'},
-      {name: 'Valentin FOLASTRE', role: 'Developer', color: '#8B00FF'}
+      {name: 'Simone BURON', role: 'Happyness manager', color: '#FF7F00'},
+      {name: 'Lucie BURON', role: 'Graphic artist', color: '#FFFF00'},
+      {name: 'Margaux RIANT', role: 'Developer', color: '#00FF00'},
+      {name: 'Mathis VALERIO', role: 'Sound designer & Compositor', color: '#0000FF'},
+      {name: 'Melody MORTIER', role: 'Graphic & Communication', color: '#4B0082'},
+      {name: 'Romuald LE CORROLLER', role: 'Developer', color: '#8B00FF'},
+      {name: 'Valentin FOLASTRE', role: 'Developer', color: '#FF0000'},
     ];
   }
 
   create(): void {
     const width = this.scale.width;
     const height = this.scale.height;
-    // const speed: number = 2;
 
     this.creditsData.map((credit: CreditsDataType, index: number) => {
       const creditText = `${credit.name} - ${credit.role}`;
@@ -49,7 +49,7 @@ export default class Credits extends Scene {
 
     const mainMenuButton = new Button(this, width / 2, (9 * height) / 10, 'main menu', []);
     this.add.existing(mainMenuButton);
-    mainMenuButton.on('pointerup', () => {
+    mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
   }

@@ -20,6 +20,7 @@ export default class Intro extends Scene {
     this.add.existing(textIntro);
     this.time.delayedCall(TIME_INTRO_DURATION, this.changeScene, [], this);
     this.input.keyboard?.on('keyup', this.changeScene, this);
+    this.input.on('pointerup', this.changeScene, this);
   }
 
   changeScene(): void {
