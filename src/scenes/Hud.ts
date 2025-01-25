@@ -11,11 +11,31 @@ const PROGRESS_BAR_POSITION_X = 750;
 const PROGRESS_BAR_POSITION_Y = 39;
 
 const PROGRESS_BAR_BACKGROUND_COLORS = [
-  {color: 0xE32332, asset: TextureKey.hud.progress_bar_background_red, position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X+7, y: BACKGROUND_PROGRESS_BAR_POSITION_Y-3}},
-  {color: 0x8E17EB, asset: TextureKey.hud.progress_bar_background_blue, position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X+3, y: BACKGROUND_PROGRESS_BAR_POSITION_Y-6.4}},
-  {color: 0x2FE640, asset: TextureKey.hud.progress_bar_background_green, position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X+8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y-4}},
-  {color: 0xF649A8, asset: TextureKey.hud.progress_bar_background_pink, position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X+8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y-6}},
-  {color: 0xF8DB1B, asset: TextureKey.hud.progress_bar_background_yellow, position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X+11, y: BACKGROUND_PROGRESS_BAR_POSITION_Y}}
+  {
+    color: 0xE32332,
+    asset: TextureKey.hud.progress_bar_background_red,
+    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 7, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 3}
+  },
+  {
+    color: 0x8E17EB,
+    asset: TextureKey.hud.progress_bar_background_blue,
+    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 3, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6.4}
+  },
+  {
+    color: 0x2FE640,
+    asset: TextureKey.hud.progress_bar_background_green,
+    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 4}
+  },
+  {
+    color: 0xF649A8,
+    asset: TextureKey.hud.progress_bar_background_pink,
+    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6}
+  },
+  {
+    color: 0xF8DB1B,
+    asset: TextureKey.hud.progress_bar_background_yellow,
+    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 11, y: BACKGROUND_PROGRESS_BAR_POSITION_Y}
+  }
 ];
 
 const TIMER_BACKGROUNDS = [
@@ -77,13 +97,6 @@ export class Hud extends Scene {
     this.progress = 0
     ;
     this.updateProgressBar();
-
-    this.input.on('pointerdown', () => {
-      this.updateProgress(0.2);
-    });
-    this.input.on('pointerup', () => {
-      this.updateProgress(-0.1);
-    });
   }
 
   update(time: number) {
