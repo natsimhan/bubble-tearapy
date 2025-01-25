@@ -21,6 +21,16 @@ export const TextureKey = {
     player_leg_right_down: 'player_leg_right_down',
     player_leg_right_up: 'player_leg_right_up',
     sarbapaille: 'sarbapaille',
+  },
+  hud: {
+    progress_bar_background_blue: 'progress_bar_background_blue_v2',
+    progress_bar_background_green: 'progress_bar_background_green_v2',
+    progress_bar_background_pink: 'progress_bar_background_pink_v2',
+    progress_bar_background_red: 'progress_bar_background_red_v2',
+    progress_bar_background_yellow: 'progress_bar_background_yellow_v2',
+    timer_background_blue: 'timer_background_blue_v1',
+    timer_background_pink: 'timer_background_pink_v1',
+    timer_background_purple: 'timer_background_purple_v1',
   }
 };
 
@@ -46,6 +56,7 @@ export class Preloader extends Scene {
     this.load.image('logo', 'logo.png');
     this.preloadPlayer();
     this.preloadBubbleTea();
+    this.preloadHud();
   }
 
   create() {
@@ -76,6 +87,19 @@ export class Preloader extends Scene {
       TextureKey.bubbletea.cup_full,
       TextureKey.bubbletea.cup_mask,
     ], 'bubbletea');
+  }
+
+  private preloadHud() {
+    this.preloadFromListKey([
+      TextureKey.hud.progress_bar_background_blue,
+      TextureKey.hud.progress_bar_background_green,
+      TextureKey.hud.progress_bar_background_pink,
+      TextureKey.hud.progress_bar_background_red,
+      TextureKey.hud.progress_bar_background_yellow,
+      TextureKey.hud.timer_background_blue,
+      TextureKey.hud.timer_background_pink,
+      TextureKey.hud.timer_background_purple,
+    ], 'hud');
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {
