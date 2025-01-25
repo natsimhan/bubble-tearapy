@@ -1,5 +1,6 @@
 import {Scene} from 'phaser';
 import Rng from '../domain/Rng.ts';
+import BubbleTea from '../components/bubbletea/BubbleTea.ts';
 
 export class Game extends Scene {
   private rng: Rng;
@@ -27,14 +28,31 @@ export class Game extends Scene {
     });
     this.msg_text.setOrigin(0.5);
 
+    const bubbleTeaList: BubbleTea[] = [];
+    for (let i = 0; i < 20; i++) {
+      const bubbleTea = new BubbleTea(this, this.scale.width * this.rng.random(), this.scale.height * this.rng.random(), this.getRandomColor(), this.rng.random() > .5);
+      bubbleTea.setHeight(this.scale.height / 4 * this.rng.random());
+      bubbleTea.setDrinkLevel(this.rng.random(), this.rng.random() * 1000);
+      bubbleTeaList.push(bubbleTea);
+    }
     this.input.on('pointerup', () => {
       const diceResult = this.rng.rollADice();
       this.msg_text.setText('Seed : ' + this.rng.getSeed() + '\n' + diceResult);
 
+      for (const bubbleTea of bubbleTeaList) {
+        bubbleTea.setTint(this.getRandomColor());
+        bubbleTea.setDrinkLevel(this.rng.random(), this.rng.random() * 1000);
+      }
+
       if (diceResult === 1) {
         this.scene.start('GameOver');
       }
-
     });
   }
+
+  private getRandomColor(): number {
+    // Génère une couleur aléatoire entre 0x000000 et 0xFFFFFF
+    return Math.floor(Math.random() * 0xFFFFFF);
+  }
+
 }
