@@ -35,12 +35,12 @@ export class Game extends Scene {
 
     this.scene.launch('Hud');
 
-    this.areaTest = new ColorableArea(this, 500, 300);
+    this.areaTest = new ColorableArea(this, 500, 300, 10, this.rng);
 
     this.input.on('pointerup', () => {
       const diceResult = this.rng.rollADice();
 
-      if (diceResult === 1) {
+      if (diceResult === 100) {
         this.events.once('shutdown', () => {
           this.music.stop();
         });
