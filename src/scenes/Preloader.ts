@@ -28,6 +28,15 @@ export const TextureKey = {
   decor: {
     facade: 'facade',
     roof: 'roof',
+    splash: 'splash',
+    arbre: {
+      arbre: 'arbre',
+      elementdroit: 'elementdroit',
+      elementgauche: 'elementgauche',
+      elementmilieu: 'elementmilieu',
+      troncD: 'troncD',
+      troncG: 'troncG',
+    },
   },
   hud: {
     progress_bar_background_blue: 'progress_bar_background_blue_v2',
@@ -126,7 +135,16 @@ export class Preloader extends Scene {
     this.preloadFromListKey([
         TextureKey.decor.facade,
         TextureKey.decor.roof,
+        TextureKey.decor.splash,
     ], 'decor');
+    this.preloadFromListKey([
+        TextureKey.decor.arbre.arbre,
+        TextureKey.decor.arbre.elementdroit,
+        TextureKey.decor.arbre.elementgauche,
+        TextureKey.decor.arbre.elementmilieu,
+        TextureKey.decor.arbre.troncD,
+        TextureKey.decor.arbre.troncG,
+    ], 'decor/arbre');
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {
