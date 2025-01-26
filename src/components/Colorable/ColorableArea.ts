@@ -1,8 +1,10 @@
 import ColorableDecor from './ColorableDecor/ColorableDecor.ts';
 import DecorFactory, {DecorKey} from './ColorableDecor/DecorFactory.ts';
 import Rng from '../../domain/Rng.ts';
+import PNJ from './PNJ/PNJ.ts';
 
 const DECOR_MAX = 5;
+const PNJ_MAX = 1;
 
 const townDecorList = [
   DecorKey.building,
@@ -43,6 +45,10 @@ export default class ColorableArea {
   #decorNb: number;
   #decorFullNb: number;
   #colorableDecorList: ColorableDecor[];
+  #pnjNb: number;
+  #pnjList: PNJ[];
+  #pnjWidth;
+  #isPnjHappy: boolean;
 
 
   constructor(scene: Phaser.Scene, x: number, y: number, depth: number, rng: Rng) {
@@ -58,14 +64,36 @@ export default class ColorableArea {
     this.#decorMinWidth = this.#scene.scale.width / 5;
     this.#decorFactory = new DecorFactory();
     this.#colorableDecorList = [];
+    this.#pnjList = [];
+    this.#pnjWidth = this.#scene.scale.width / 10;
+    this.#isPnjHappy = false;
     this.generateDecorList();
+    this.generatePNJList()
     this.setDepth(this.#depth);
+  }
+
+  generatePNJList() {
+    this.#pnjNb = this.#rng.between(1, PNJ_MAX);
+    const leftBound = this.#x - this.#width / 2;
+    let minX = leftBound;
+    for (let i = 0; i < this.#pnjNb; i++) {
+      const maxX = leftBound + this.#width - (this.#pnjNb - i - 1) * this.#pnjWidth;
+      const xRight = this.#rng.realBetween(minX + this.#pnjWidth, maxX);
+      const xPnj = this.#rng.realBetween(minX + this.#pnjWidth / 2, xRight - this.#pnjWidth / 2);
+      this.#pnjList.push(new PNJ(
+          this.#scene,
+          xPnj,
+          this.#y,
+          this.#x - this.#width / 2 + this.#pnjWidth / 2,
+          this.#x + this.#width / 2 - this.#pnjWidth / 2,
+      ));
+      minX = xRight;
+    }
   }
 
   generateDecorList() {
     this.#decorNb = this.#rng.between(3, DECOR_MAX);
     const biome = biomeList[this.#rng.between(0, biomeList.length - 1)];
-    console.debug(biome);
     const leftBound = this.#x - this.#width / 2;
     let minX = leftBound;
     for (let i = 0; i < this.#decorNb; i++) {
@@ -87,8 +115,12 @@ export default class ColorableArea {
   }
 
   setDepth(depth: number) {
+    this.#depth = depth;
     this.#colorableDecorList.forEach((decor) => {
       decor.setDpeth(depth);
+    })
+    this.#pnjList.forEach((pnj) => {
+      pnj.setDepth(depth + 3);
     })
   }
 
@@ -101,6 +133,10 @@ export default class ColorableArea {
       ) {
         if (decor.receiveBubble(color, size, x, y)) {
           this.#decorFullNb += 1;
+          if (!this.#isPnjHappy && this.#decorFullNb === this.#decorNb) {
+            this.#isPnjHappy = true;
+            this.#pnjList[0].switchToHappy();
+          }
         }
         break;
       }

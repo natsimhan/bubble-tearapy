@@ -112,6 +112,12 @@ export const TextureKey = {
   background: {
     bg1: 'parallax_bg2',
     bg2: 'parallax_bg1',
+  },
+  pnj: {
+    pnj_heureux_1: 'pnj_heureux_1',
+    pnj_heureux_2: 'pnj_heureux_2',
+    pnj_triste_1: 'pnj_triste_1',
+    pnj_triste_2: 'pnj_triste_2',
   }
 };
 
@@ -142,6 +148,7 @@ export class Preloader extends Scene {
     this.preloadParallaxBackground();
     this.preloadPlayer();
     this.preloadUi();
+    this.preloadPNJ();
   }
 
   create() {
@@ -269,6 +276,15 @@ export class Preloader extends Scene {
         TextureKey.decor.vache.vache_tache4,
         TextureKey.decor.vache.vache_tache5,
     ], 'decor/vache');
+  }
+
+  private preloadPNJ() {
+    this.preloadFromListKey([
+        TextureKey.pnj.pnj_heureux_1,
+        TextureKey.pnj.pnj_heureux_2,
+        TextureKey.pnj.pnj_triste_1,
+        TextureKey.pnj.pnj_triste_2,
+    ], 'pnj')
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {
