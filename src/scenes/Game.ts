@@ -3,7 +3,7 @@ import Rng from '../domain/Rng.ts';
 import ColorableArea from '../components/Colorable/ColorableArea.ts';
 import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
-import {TextureKey} from './Preloader.ts';
+import {AudioKey, TextureKey} from './Preloader.ts';
 
 const MINIMAL_SPEED = 0.05;
 
@@ -21,14 +21,12 @@ export class Game extends Scene {
     super('Game');
     // this.rng = new Rng('BubbleTearapy');
     // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
-    this.rng = new Rng('ea9c37de09');
+    this.rng = new Rng('c53b9c667f');//'ea9c37de09');
+
+    // 'c53b9c667f' : le seed des chèvres :)
 
     this.speed = MINIMAL_SPEED;
     this.speedLastSlower = 0;
-  }
-
-  preload() {
-    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
   }
 
   create() {
@@ -38,7 +36,7 @@ export class Game extends Scene {
 
     this.parallax = new Parallax(this);
 
-    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music = this.sound.add(AudioKey.musics.theme_principal, {loop: true, volume: 0.5});
     this.music.play();
     this.events.once('shutdown', () => {
       this.music.stop();
@@ -48,10 +46,10 @@ export class Game extends Scene {
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height - roadHeight / 4);
     player.setHeight(this.scale.height * .5);
 
-    this.areaTest = new ColorableArea(this, this.scale.width / 2, this.scale.height / 2, 10, this.rng);
-    this.input.on('pointerup', (pointer) => {
-      this.areaTest.receivedBubble(0x123456, 50, pointer.worldX, pointer.worldY);
-    });
+    this.areaTest = new ColorableArea(this, this.scale.width * 0.0001, this.scale.height, -10, this.rng);
+    // this.input.on('pointerup', (pointer) => {
+    //   this.areaTest.receivedBubble(0x123456, 50, pointer.worldX, pointer.worldY);
+    // });
 
     this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
       switch (event.code) {

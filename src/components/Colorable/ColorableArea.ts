@@ -50,7 +50,7 @@ export default class ColorableArea {
     this.#heigth = this.#scene.scale.height;
     this.#width = this.#scene.scale.width;
     this.#x = x + this.#width / 2;
-    this.#y = this.#scene.scale.height * 2 / 3;
+    this.#y = y;
     this.#depth = depth;
     this.#rng = rng;
     this.#decorFullNb = 0;
@@ -60,6 +60,11 @@ export default class ColorableArea {
     this.#colorableDecorList = [];
     this.generateDecorList();
     this.setDepth(this.#depth);
+
+    this.#scene.input.on('ColorableArea:receivedBubble', (color: number, power: number, worldX: number, worldY: number) => {
+      console.debug('ColorableArea:receivedBubble');
+      this.receivedBubble(color, power * 100, worldX, worldY);
+    });
   }
 
   generateDecorList() {

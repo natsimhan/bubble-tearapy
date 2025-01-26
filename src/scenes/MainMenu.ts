@@ -1,5 +1,6 @@
 import {Scene, GameObjects, Sound} from 'phaser';
 import Button from "../components/Button.ts";
+import {AudioKey} from './Preloader.ts';
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
@@ -9,14 +10,10 @@ export class MainMenu extends Scene {
     super('MainMenu');
   }
 
-  preload() {
-    this.load.audio('main_menu', 'music/main_menu.ogg');
-  }
-
   create() {
     this.add.image(this.scale.width / 2, this.scale.height / 2, 'background');
 
-    this.music = this.sound.add('main_menu', {loop: true, volume: 0.5});
+    this.music = this.sound.add(AudioKey.musics.main_menu, {loop: true, volume: 0.25});
     this.music.play();
 
     const playButton = new Button(this, this.scale.width / 3, this.scale.height * .8, 'Play', []);

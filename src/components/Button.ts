@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import {TextureKey, UiConfig} from "../scenes/Preloader.ts";
+import {AudioKey, TextureKey, UiConfig} from "../scenes/Preloader.ts";
 
 export default class Button extends Phaser.GameObjects.Container {
 
@@ -41,10 +41,16 @@ export default class Button extends Phaser.GameObjects.Container {
       pixelPerfect: true,
       useHandCursor: true,
     });
+    this.buttonNineSlice.on('pointerover', () => {
+      this.scene.sound.add(AudioKey.effects.button_hover, {volume: 1}).play();
+    });
     this.scene.add.existing(this);
   }
 
   onClickButton(event: string, callback: () => void): void {
-    this.buttonNineSlice.on(event, callback);
+    this.buttonNineSlice.on(event, () => {
+      this.scene.sound.add(AudioKey.effects.button_clic, {volume: 0.5}).play();
+      callback();
+    });
   }
 }

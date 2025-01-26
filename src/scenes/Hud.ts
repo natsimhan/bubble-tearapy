@@ -1,65 +1,38 @@
 import {Scene} from 'phaser';
-import {TextureKey} from './Preloader.ts';
+import {TextureKey, UiConfig} from './Preloader.ts';
 import ColorList from '../domain/ColorList.ts';
-
-const TIMMER_POSITION_X = 150;
-const TIMMER_POSITION_Y = 60;
-
-const BACKGROUND_PROGRESS_BAR_POSITION_X = 800;
-const BACKGROUND_PROGRESS_BAR_POSITION_Y = 70;
-
-const PROGRESS_BAR_POSITION_X = 750;
-const PROGRESS_BAR_POSITION_Y = 39;
-
-// background_gauge_0 : rouge #e32332
-// background_gauge_1 : Bleu  #8e17eb
-// background_gauge_2 : Vert  #2fe640
-// background_gauge_3 : Jaune #f8db1b
-// background_gauge_4 : Rose  #f649a8
 
 const PROGRESS_BAR_BACKGROUND_COLORS = [
   {
     color: ColorList.h2n('#E32332'),
     asset: TextureKey.hud.background_gauge_0,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 7, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 3}
   },
   {
-    color: 0x8E17EB,
+    color: ColorList.h2n('#8e17eb'),
     asset: TextureKey.hud.background_gauge_1,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 3, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6.4}
   },
   {
-    color: 0x2FE640,
+    color: ColorList.h2n('#2fe640'),
     asset: TextureKey.hud.background_gauge_2,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 4}
   },
   {
-    color: 0xF649A8,
+    color: ColorList.h2n('#f8db1b'),
     asset: TextureKey.hud.background_gauge_3,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6}
   },
   {
-    color: 0xF8DB1B,
+    color: ColorList.h2n('#f649a8'),
     asset: TextureKey.hud.background_gauge_4,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 11, y: BACKGROUND_PROGRESS_BAR_POSITION_Y}
   }
 ];
 
-const TIMER_BACKGROUNDS = [
-  {time: 0, asset: TextureKey.hud.timer_background_pink},
-  {time: 30, asset: TextureKey.hud.timer_background_purple},
-  {time: 60, asset: TextureKey.hud.timer_background_blue}
-];
-
 export class Hud extends Scene {
-  timerText: Phaser.GameObjects.Text;
-  progressBar: Phaser.GameObjects.Graphics;
-  progressBarBackground: Phaser.GameObjects.Sprite;
-  timerBackground: Phaser.GameObjects.Sprite;
+  private timerText: Phaser.GameObjects.Text;
+  private progressBar: Phaser.GameObjects.Graphics;
+  private progressBarBackground: Phaser.GameObjects.Sprite;
+  private timerBackground: Phaser.GameObjects.Sprite;
 
-  startTime: number = 0;
-  progress: number = 0;
-  currentTimerAsset: string;
+  private startTime: number = 0;
+  private progress: number = 0;
 
   constructor() {
     super('Hud');
@@ -67,29 +40,30 @@ export class Hud extends Scene {
 
   create() {
     this.timerBackground = this.add.sprite(
-        TIMMER_POSITION_X,
-        TIMMER_POSITION_Y,
+        this.scale.width * .1,
+        this.scale.height * .1,
         TextureKey.hud.timer_background_pink
     );
-    this.timerBackground.setScale(0.2);
+    this.timerBackground.setScale(this.scale.height / 6 / this.timerBackground.displayHeight);
     this.timerBackground.setOrigin(0.5, 0.5);
-    this.currentTimerAsset = TextureKey.hud.timer_background_pink;
+
+    const timerBounds = this.timerBackground.getBounds();
 
     this.timerText = this.add.text(
-        TIMMER_POSITION_X,
-        TIMMER_POSITION_Y,
+        timerBounds.centerX,
+        timerBounds.centerY,
         '00:00',
         {
-          fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+          fontFamily: UiConfig.fontFamily, fontSize: 80, color: '#ffffff',
           stroke: '#000000', strokeThickness: 8,
           align: 'center'
         }
     );
-    this.timerText.setOrigin(0.5, 0.5);
+    this.timerText.setOrigin(0.5, 0.5).setScale(timerBounds.height / this.timerText.displayHeight * .4);
 
     this.progressBarBackground = this.add.sprite(
-        BACKGROUND_PROGRESS_BAR_POSITION_X,
-        BACKGROUND_PROGRESS_BAR_POSITION_Y,
+        this.scale.width * .8,
+        this.scale.height * .1,
         PROGRESS_BAR_BACKGROUND_COLORS[0].asset
     );
     this.progressBarBackground.setScale(0.3);
@@ -98,7 +72,6 @@ export class Hud extends Scene {
     this.progressBar = this.add.graphics();
     this.progressBar.fillStyle(PROGRESS_BAR_BACKGROUND_COLORS[0].color, 1);
     this.updateProgressBar();
-
 
     this.startTime = this.time.now;
     this.progress = 0
@@ -126,15 +99,15 @@ export class Hud extends Scene {
     this.progressBar.fillStyle(progressData.color, 1);
     this.progressBarBackground.setTexture(progressData.asset);
     this.progressBarBackground.setPosition(
-        progressData.position.x,
-        progressData.position.y
+        this.scale.width * .8,
+        this.scale.height * .1
     );
 
     // Dessiner la barre de progression si nécessaire
     if (this.progress > 0) {
       this.progressBar.fillRoundedRect(
-          PROGRESS_BAR_POSITION_X,
-          PROGRESS_BAR_POSITION_Y,
+          this.scale.width * .8,
+          this.scale.height * .1,
           this.progress * 225,
           39,
           10

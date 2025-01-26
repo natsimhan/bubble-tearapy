@@ -17,6 +17,7 @@ export default class Parallax {
         this.scene.scale.height,
     );
 
+    let depthOffset = 0;
     for (const texture of [
       TextureKey.background.parallax_bg4,
       TextureKey.background.parallax_bg3,
@@ -30,7 +31,7 @@ export default class Parallax {
           spriteR.width,
           0, //spriteR.height,
           texture
-      ).setOrigin(.5, 1);
+      ).setOrigin(.5, 1).setDepth(-1_000_000 + (++depthOffset));
       this.backgroundList.push(bg);
     }
   }

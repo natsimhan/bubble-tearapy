@@ -83,7 +83,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     const containerMatrix = this.sarbapailleImage.getWorldTransformMatrix();
     const originX = containerMatrix.tx;
     const originY = containerMatrix.ty;
-    if (worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
+    if (true || worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
       if (!this.currentBubbleTea || this.shotCounter <= 0) {
         this.updateGauge(true);
         return;
@@ -98,6 +98,8 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
       const distance = Phaser.Math.Distance.Between(originX, originY, worldPoint.x, worldPoint.y);
       const duration = Phaser.Math.Clamp(distance * 2, 300, 1000);
 
+      const finalColor = this.shotColor;
+
       this.scene.tweens.add({
         targets: ball,
         scale: 2 * finalPower,
@@ -106,17 +108,18 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
         duration: duration,
         ease: 'Cubic.easeOut',
         onComplete: () => {
-          this.scene.tweens.add({
-            targets: ball,
-            scale: 5 * finalPower,
-            x: worldPoint.x - this.scene.scale.width / 2,
-            alpha: 0,
-            duration: 1000,
-            ease: 'Linear',
-            onComplete: () => {
+          this.scene.input.emit('ColorableArea:receivedBubble', finalColor, finalPower, worldPoint.x, worldPoint.y);
               ball.destroy();
-            },
-          });
+          // this.scene.tweens.add({
+          //   targets: ball,
+          //   scale: 5 * finalPower,
+          //   x: worldPoint.x - this.scene.scale.width / 2,
+          //   alpha: 0,
+          //   duration: 1000,
+          //   ease: 'Linear',
+          //   onComplete: () => {
+          //   },
+          // });
         },
       });
     }

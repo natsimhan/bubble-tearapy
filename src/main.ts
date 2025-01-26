@@ -17,7 +17,7 @@ const config: Types.Core.GameConfig = {
   width: window.innerWidth,
   height: window.innerHeight,
   parent: 'game-container',
-  backgroundColor: '#028af8',
+  backgroundColor: '#151515',
   dom: {
     createContainer: true,
   },

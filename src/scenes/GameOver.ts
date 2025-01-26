@@ -4,22 +4,19 @@ export class GameOver extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   gameover_text: Phaser.GameObjects.Text;
-  public timer!: number;
+  public timer: number = 0;
 
   constructor() {
     super('GameOver');
   }
 
-  init(data: { timer: any; }): void {
-    this.timer = data.timer;
+  init(data: { timer: number; }): void {
+    this.timer = data?.timer || 0;
   }
 
   create() {
     this.camera = this.cameras.main
     this.camera.setBackgroundColor(0xff0000);
-
-    // todo temporaire le temps de la fusion avec les autres branche et de la connetion au vrai timer
-    this.registry.set('timer', this.generateRandomTime());
 
     this.background = this.add.image(512, 384, 'background');
     this.background.setAlpha(0.5);
@@ -32,15 +29,7 @@ export class GameOver extends Scene {
     this.gameover_text.setOrigin(0.5);
 
     this.input.once('pointerup', () => {
-          this.scene.start('Leaderboard');
+      this.scene.start('Leaderboard', {timer: this.timer});
     });
-  }
-
-  // todo temporaire le temps de la fusion avec les autres branche et de la connetion au vrai timer
-  generateRandomTime(): number {
-    const minTime = 5;
-    const maxTime = 3000;
-    // const maxTime = 6;
-    return Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
   }
 }

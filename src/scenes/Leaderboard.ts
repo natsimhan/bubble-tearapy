@@ -1,5 +1,6 @@
 import {Scene, Sound} from 'phaser';
 import Button from '../components/Button.ts';
+import {AudioKey} from './Preloader.ts';
 
 interface ScoreType {
   name: string,
@@ -12,31 +13,32 @@ export default class Leaderboard extends Scene {
 
   private width: number;
   private height: number;
+  public timer: number = 0;
 
   constructor() {
     super('Leaderboard');
   }
 
-  preload() {
-    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
+  init(data: { timer: number; }): void {
+    this.timer = data?.timer || 0;
   }
 
   create() {
+    this.add.image(this.scale.width / 2, this.scale.height / 2, 'bg_end');
+
     this.width = this.scale.width;
     this.height = this.scale.height;
 
-    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music = this.sound.add(AudioKey.musics.theme_credits, {loop: true, volume: 0.5});
     this.music.play();
-
-    const randomTime = this.registry.get('timer');
 
     this.events.once('shutdown', () => {
       this.music.stop();
     });
 
-    if (this.isInTop10(randomTime)) {
+    if (this.timer && this.isInTop10(this.timer)) {
       this.promptForName((name: string) => {
-        this.saveScoreToLeaderboard(name, randomTime);
+        this.saveScoreToLeaderboard(name, this.timer);
       });
     } else {
       this.displayLeaderboard();
@@ -49,7 +51,7 @@ export default class Leaderboard extends Scene {
   }
 
   displayLeaderboard(): void {
-    const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []);
+    const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []).setScale(.8);
     mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
