@@ -27,9 +27,11 @@ const countrysideDecorList = [
 ];
 
 const biomeList = [
-    countrysideDecorList,
-    townDecorList,
+  countrysideDecorList,
+  townDecorList,
 ];
+
+const decorSizeRelation: Map<string, number> = new Map();
 
 export default class ColorableArea {
 
@@ -67,8 +69,20 @@ export default class ColorableArea {
     this.#pnjList = [];
     this.#pnjWidth = this.#scene.scale.width / 10;
     this.#isPnjHappy = false;
+    decorSizeRelation.set(DecorKey.building, 1);
+    decorSizeRelation.set(DecorKey.building2, 1);
+    decorSizeRelation.set(DecorKey.bush1, 0.4);
+    decorSizeRelation.set(DecorKey.bush2, 0.4);
+    decorSizeRelation.set(DecorKey.cow, 0.6);
+    decorSizeRelation.set(DecorKey.goat, 0.6);
+    decorSizeRelation.set(DecorKey.house, 0.75);
+    decorSizeRelation.set(DecorKey.house2, 0.75);
+    decorSizeRelation.set(DecorKey.house3, 0.75);
+    decorSizeRelation.set(DecorKey.tree, 0.75);
+    decorSizeRelation.set(DecorKey.tree2, 0.75);
     this.generateDecorList();
     this.generatePNJList()
+
     this.setDepth(this.#depth);
   }
 
@@ -102,13 +116,18 @@ export default class ColorableArea {
       const decorWidth = this.#rng.realBetween(this.#decorMinWidth, xRight - minX);
       const xDecor = this.#rng.realBetween(minX + decorWidth / 2, xRight - decorWidth / 2);
       const yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10);
+      const texture: string = biome[this.#rng.between(0, biome.length - 1)];
+      let textureMultiplier = decorSizeRelation.get(texture);
+      if (!textureMultiplier) {
+        textureMultiplier = 1;
+      }
       this.#colorableDecorList.push(this.#decorFactory.createDecor(
           this.#scene,
           xDecor,
           yDecor,
-          this.#rng.realBetween(this.#scene.scale.height / 4, yDecor),
+          this.#rng.realBetween(this.#scene.scale.height / 2, yDecor) * textureMultiplier,
           decorWidth,
-          biome[this.#rng.between(0, biome.length - 1)]
+          texture
       ));
       minX = xRight;
     }

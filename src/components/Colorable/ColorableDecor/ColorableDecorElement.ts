@@ -38,7 +38,6 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
 
   receiveBubble(color: number, size: number, x: number, y: number): boolean {
     if (!this.#isElementFull) {
-      console.debug('size', size);
       this.#colorReceived.set(color, size * size + this.getCurrentSizeByColor(color));
       this.#isElementFull = this.checkElementFull();
       if (!this.#isElementFull) {
