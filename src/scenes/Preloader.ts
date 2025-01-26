@@ -25,8 +25,6 @@ export const TextureKey = {
     sarbapaille: 'sarbapaille',
   },
   decor: {
-    facade: 'facade',
-    roof: 'roof',
     splash: 'splash',
     arbre: {
       arbre: 'arbre',
@@ -42,10 +40,10 @@ export const TextureKey = {
       arbre2_tronc: 'arbre2_tronc',
     },
     building: {
-      buiding_fenetre: 'buiding_fenetre',
-      buiding_fond: 'buiding_fond',
-      buiding: 'buiding',
-      buiding_porte: 'buiding_porte',
+      building_fenetre: 'buiding_fenetre',
+      building_fond: 'buiding_fond',
+      building: 'buiding',
+      building_porte: 'buiding_porte',
     },
     building2: {
       building2_facade: 'building2_facade',
@@ -195,8 +193,6 @@ export class Preloader extends Scene {
 
   private preloadDecor() {
     this.preloadFromListKey([
-      TextureKey.decor.facade,
-      TextureKey.decor.roof,
       TextureKey.decor.splash,
     ], 'decor');
     this.preloadFromListKey([
