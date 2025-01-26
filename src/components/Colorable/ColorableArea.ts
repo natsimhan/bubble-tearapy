@@ -2,7 +2,32 @@ import ColorableDecor from './ColorableDecor/ColorableDecor.ts';
 import DecorFactory, {DecorKey} from './ColorableDecor/DecorFactory.ts';
 import Rng from '../../domain/Rng.ts';
 
-const DECOR_MAX = 7;
+const DECOR_MAX = 5;
+
+const townDecorList = [
+  DecorKey.building,
+  DecorKey.building2,
+  DecorKey.house,
+  DecorKey.house2,
+  DecorKey.house3,
+  DecorKey.tree,
+  DecorKey.bush1
+];
+
+const countrysideDecorList = [
+  DecorKey.tree,
+  DecorKey.tree2,
+  DecorKey.bush1,
+  DecorKey.bush2,
+  DecorKey.goat,
+  DecorKey.cow,
+  DecorKey.house,
+];
+
+const biomeList = [
+    countrysideDecorList,
+    townDecorList,
+];
 
 export default class ColorableArea {
 
@@ -30,7 +55,7 @@ export default class ColorableArea {
     this.#rng = rng;
     this.#decorFullNb = 0;
     this.#decorNb = 0;
-    this.#decorMinWidth = this.#scene.scale.width / 10;
+    this.#decorMinWidth = this.#scene.scale.width / 5;
     this.#decorFactory = new DecorFactory();
     this.#colorableDecorList = [];
     this.generateDecorList();
@@ -39,6 +64,8 @@ export default class ColorableArea {
 
   generateDecorList() {
     this.#decorNb = this.#rng.between(3, DECOR_MAX);
+    const biome = biomeList[this.#rng.between(0, biomeList.length - 1)];
+    console.debug(biome);
     const leftBound = this.#x - this.#width / 2;
     let minX = leftBound;
     for (let i = 0; i < this.#decorNb; i++) {
@@ -46,14 +73,14 @@ export default class ColorableArea {
       const xRight = this.#rng.realBetween(minX + this.#decorMinWidth, maxX);
       const decorWidth = this.#rng.realBetween(this.#decorMinWidth, xRight - minX);
       const xDecor = this.#rng.realBetween(minX + decorWidth / 2, xRight - decorWidth / 2);
-      const yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10)
+      const yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10);
       this.#colorableDecorList.push(this.#decorFactory.createDecor(
           this.#scene,
           xDecor,
           yDecor,
           this.#rng.realBetween(this.#scene.scale.height / 4, yDecor),
           decorWidth,
-          DecorKey.tree
+          biome[this.#rng.between(0, biome.length - 1)]
       ));
       minX = xRight;
     }
@@ -83,7 +110,6 @@ export default class ColorableArea {
   getAreaScore(): number {
     return (this.#decorFullNb / this.#decorNb)
   }
-
 
 
 }
