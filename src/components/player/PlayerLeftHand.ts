@@ -13,6 +13,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
   private shotCounter: number = 0;
   private shotPower: number = 1;
   private longPressTimer: Phaser.Time.TimerEvent | null = null;
+  private shotColor: number = 0xffffff;
 
 
   constructor(scene: Phaser.Scene, x: number, y: number, private playerCharacter: PlayerCharacter) {
@@ -32,15 +33,14 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
         bubbleTea.shakeMeAnimation();
         return;
       }
-      if (bubbleTea.drink()) {
-        this.shotCounter = 5;
-        this.currentBubbleTea = bubbleTea;
-        this.updateGauge(this.currentBubbleTea.getColor());
-      } else {
-        this.shotCounter = 0;
-        this.currentBubbleTea = null;
-        this.updateGauge(0xffffff);
+      if (!bubbleTea.drink()) {
+        this.updateGauge(true);
+        return;
       }
+      this.shotCounter = 5;
+      this.currentBubbleTea = bubbleTea;
+      this.shotColor = this.currentBubbleTea.getColor();
+      this.updateGauge();
     })
 
     this.scene.input.on('pointerdown', () => {
@@ -85,26 +85,18 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     const originY = containerMatrix.ty;
     if (worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
       if (!this.currentBubbleTea || this.shotCounter <= 0) {
-        this.currentBubbleTea = null;
-        this.shotPower = 1;
-        this.updateGauge(0xffffff);
+        this.updateGauge(true);
         return;
       }
-      this.shotCounter--;
-      const ball = this.scene.add.circle(originX, originY, 5, this.sarbapailleImage.tint).setDepth(1);
+      this.shotCounter -= this.shotPower;
+      this.updateGauge();
+      const finalPower = this.shotPower;
+      this.shotPower = 1;
+
+      const ball = this.scene.add.circle(originX, originY, 5, this.shotColor).setDepth(1);
 
       const distance = Phaser.Math.Distance.Between(originX, originY, worldPoint.x, worldPoint.y);
       const duration = Phaser.Math.Clamp(distance * 2, 300, 1000);
-
-      this.updateGauge(this.currentBubbleTea.getColor());
-
-      if (this.shotCounter <= 0) {
-        this.updateGauge(0xffffff);
-        this.currentBubbleTea = null;
-      }
-
-      const finalPower = this.shotPower;
-      this.shotPower = 1;
 
       this.scene.tweens.add({
         targets: ball,
@@ -130,11 +122,17 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     }
   }
 
-  private updateGauge(color: number) {
-    const topLeft = this.shotCounter > 0 ? color : 0xffffff;
-    const topRight = this.shotCounter > 3 ? color : 0xffffff;
-    const bottomLeft = this.shotCounter > 1 ? color : 0xffffff;
-    const bottomRight = this.shotCounter > 2 ? color : 0xffffff;
+  private updateGauge(reset: boolean = false): void {
+    if (reset) {
+      this.currentBubbleTea = null;
+      this.shotColor = 0xffffff;
+      this.shotCounter = 0;
+      this.shotPower = 1;
+    }
+    const topLeft = this.shotCounter > 0 ? this.shotColor : 0xffffff;
+    const topRight = this.shotCounter > 3 ? this.shotColor : 0xffffff;
+    const bottomLeft = this.shotCounter > 1 ? this.shotColor : 0xffffff;
+    const bottomRight = this.shotCounter > 2 ? this.shotColor : 0xffffff;
     this.sarbapailleImage.setTint(
         topLeft,
         topRight,
