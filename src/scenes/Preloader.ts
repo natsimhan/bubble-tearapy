@@ -2,6 +2,9 @@ import {Scene} from 'phaser';
 
 export const TextureKey = {
   button: 'button',
+  logo: {
+    logo_bubble_teapay: 'logo_bubble_teapay',
+  },
   bubbletea: {
     bubbletea: 'bubbletea',
     cup: 'cup',
@@ -21,6 +24,20 @@ export const TextureKey = {
     player_leg_right_down: 'player_leg_right_down',
     player_leg_right_up: 'player_leg_right_up',
     sarbapaille: 'sarbapaille',
+  },
+  hud: {
+    progress_bar_background_blue: 'progress_bar_background_blue_v2',
+    progress_bar_background_green: 'progress_bar_background_green_v2',
+    progress_bar_background_pink: 'progress_bar_background_pink_v2',
+    progress_bar_background_red: 'progress_bar_background_red_v2',
+    progress_bar_background_yellow: 'progress_bar_background_yellow_v2',
+    timer_background_blue: 'timer_background_blue_v1',
+    timer_background_pink: 'timer_background_pink_v1',
+    timer_background_purple: 'timer_background_purple_v1',
+  },
+  background: {
+    bg1: 'parallax_bg2',
+    bg2: 'parallax_bg1',
   }
 };
 
@@ -44,12 +61,21 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
     this.load.atlas(TextureKey.button, 'button/nine-slice.png', 'button/nine-slice.json');
     this.load.image('logo', 'logo.png');
+    this.preloadLogo();
     this.preloadPlayer();
     this.preloadBubbleTea();
+    this.preloadHud();
+    this.preloadParallaxBackground();
   }
 
   create() {
     this.scene.start('Game');
+  }
+
+  private preloadLogo() {
+    this.preloadFromListKey([
+      TextureKey.logo.logo_bubble_teapay
+    ], 'logo');
   }
 
   private preloadPlayer() {
@@ -78,9 +104,30 @@ export class Preloader extends Scene {
     ], 'bubbletea');
   }
 
+  private preloadHud() {
+    this.preloadFromListKey([
+      TextureKey.hud.progress_bar_background_blue,
+      TextureKey.hud.progress_bar_background_green,
+      TextureKey.hud.progress_bar_background_pink,
+      TextureKey.hud.progress_bar_background_red,
+      TextureKey.hud.progress_bar_background_yellow,
+      TextureKey.hud.timer_background_blue,
+      TextureKey.hud.timer_background_pink,
+      TextureKey.hud.timer_background_purple,
+    ], 'hud');
+  }
+
   private preloadFromListKey(listKey: string[], subpath: string) {
     for (const imgKey of listKey) {
       this.load.image(imgKey, `${subpath}/${imgKey}.png`);
     }
+  }
+
+
+  private preloadParallaxBackground(): void {
+    this.preloadFromListKey([
+      TextureKey.background.bg1,
+      TextureKey.background.bg2,
+    ], 'background');
   }
 }

@@ -7,6 +7,7 @@ import {Preloader} from './scenes/Preloader';
 import {Game, Types} from "phaser";
 import Leaderboard from "./scenes/Leaderboard.ts";
 import Credits from "./scenes/Credits.ts";
+import {Hud} from './scenes/Hud.ts';
 import Intro from './scenes/Intro.ts';
 
 //  Find out more information about the Game Config at:
@@ -17,6 +18,9 @@ const config: Types.Core.GameConfig = {
   height: window.innerHeight,
   parent: 'game-container',
   backgroundColor: '#028af8',
+  dom: {
+    createContainer: true,
+  },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
@@ -27,6 +31,7 @@ const config: Types.Core.GameConfig = {
     Intro,
     MainMenu,
     MainGame,
+    Hud,
     GameOver,
     Leaderboard,
     Credits,

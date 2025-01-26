@@ -1,5 +1,6 @@
-import {Scene} from 'phaser';
+import {Scene, Sound} from 'phaser';
 import Rng from '../domain/Rng.ts';
+import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 
 export class Game extends Scene {
@@ -7,29 +8,41 @@ export class Game extends Scene {
 
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
+  music: Sound.BaseSound;
+  private parallax: Parallax;
 
   constructor() {
     super('Game');
     this.rng = new Rng('BubbleTearapy');
   }
 
+  preload() {
+    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
+  }
+
   create() {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x333333);
+    this.parallax = new Parallax(this);
 
-    // this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
-    // this.background.setAlpha(0.5).setScale(this.scale.width / this.background.width, this.scale.height / this.background.height);
-
+    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music.play();
 
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height);
     player.setHeight(this.scale.height * .5);
 
-    this.input.on('pointerup', () => {
-      // const diceResult = this.rng.rollADice();
+    this.scene.launch('Hud');
 
-      // if (diceResult === 1) {
-      //   this.scene.start('GameOver');
-      // }
+    this.input.on('pointerup', () => {
+      const diceResult = this.rng.rollADice();
+
+      if (diceResult === 1) {
+        this.events.once('shutdown', () => {
+          this.music.stop();
+        });
+        this.scene.start('GameOver', {timer: 150});
+        this.scene.stop('Hud')
+      }
     });
 
 
@@ -56,6 +69,10 @@ export class Game extends Scene {
           break;
       }
     });
+  }
+
+  update(): void {
+    this.parallax.update();
   }
 
 }
