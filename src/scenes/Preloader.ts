@@ -152,6 +152,12 @@ export const TextureKey = {
     plant2: 'plant2',
     plant3: 'plant3',
     road: 'road',
+  },
+  pnj: {
+    pnj_heureux_1: 'pnj_heureux_1',
+    pnj_heureux_2: 'pnj_heureux_2',
+    pnj_triste_1: 'pnj_triste_1',
+    pnj_triste_2: 'pnj_triste_2',
   }
 };
 
@@ -189,6 +195,7 @@ export class Preloader extends Scene {
     this.preloadParallaxBackground();
     this.preloadPlayer();
     this.preloadUi();
+    this.preloadPNJ();
   }
 
   create() {
@@ -253,14 +260,14 @@ export class Preloader extends Scene {
     ], 'decor/arbre');
     this.preloadFromListKey([
       TextureKey.decor.arbre2.arbre2_feuillage,
-      TextureKey.decor.arbre2.arbre2,
-      TextureKey.decor.arbre2.arbre2_tronc,
-    ], 'decor/arbre2');
+        TextureKey.decor.arbre2.arbre2,
+        TextureKey.decor.arbre2.arbre2_tronc,
+        ], 'decor/arbre2');
     this.preloadFromListKey([
       TextureKey.decor.building.building_fenetre,
-      TextureKey.decor.building.building_fond,
-      TextureKey.decor.building.building,
-      TextureKey.decor.building.building_porte,
+        TextureKey.decor.building.building_fond,
+        TextureKey.decor.building.building,
+        TextureKey.decor.building.building_porte,
     ], 'decor/building');
     this.preloadFromListKey([
       TextureKey.decor.building2.building2_facade,
@@ -277,46 +284,55 @@ export class Preloader extends Scene {
       TextureKey.decor.buisson2.buisson2,
     ], 'decor/buisson2');
     this.preloadFromListKey([
-      TextureKey.decor.chevre.chevre_corne,
-      TextureKey.decor.chevre.chevre_corps,
-      TextureKey.decor.chevre.chevre_museau,
-      TextureKey.decor.chevre.chevre_patte,
-      TextureKey.decor.chevre.chevre,
-      TextureKey.decor.chevre.chevre_tache1,
-      TextureKey.decor.chevre.chevre_tache2,
-      TextureKey.decor.chevre.chevre_tache3,
+        TextureKey.decor.chevre.chevre_corne,
+        TextureKey.decor.chevre.chevre_corps,
+        TextureKey.decor.chevre.chevre_museau,
+        TextureKey.decor.chevre.chevre_patte,
+        TextureKey.decor.chevre.chevre,
+        TextureKey.decor.chevre.chevre_tache1,
+        TextureKey.decor.chevre.chevre_tache2,
+        TextureKey.decor.chevre.chevre_tache3,
     ], 'decor/chevre');
     this.preloadFromListKey([
-      TextureKey.decor.house.house_facade,
-      TextureKey.decor.house.house_fenetre,
-      TextureKey.decor.house.house_mur,
-      TextureKey.decor.house.house,
-      TextureKey.decor.house.house_porte,
-      TextureKey.decor.house.house_toit,
+        TextureKey.decor.house.house_facade,
+        TextureKey.decor.house.house_fenetre,
+        TextureKey.decor.house.house_mur,
+        TextureKey.decor.house.house,
+        TextureKey.decor.house.house_porte,
+        TextureKey.decor.house.house_toit,
     ], 'decor/house');
     this.preloadFromListKey([
-      TextureKey.decor.house2.house2_facade,
-      TextureKey.decor.house2.house2_fenetre,
-      TextureKey.decor.house2.house2,
-      TextureKey.decor.house2.house2_porte,
-      TextureKey.decor.house2.house2_toit,
+        TextureKey.decor.house2.house2_facade,
+        TextureKey.decor.house2.house2_fenetre,
+        TextureKey.decor.house2.house2,
+        TextureKey.decor.house2.house2_porte,
+        TextureKey.decor.house2.house2_toit,
     ], 'decor/house2');
     this.preloadFromListKey([
-      TextureKey.decor.house3.house3_facade,
-      TextureKey.decor.house3.house3_fenetre,
-      TextureKey.decor.house3.house3,
-      TextureKey.decor.house3.house3_porte,
-      TextureKey.decor.house3.house3_toit,
+        TextureKey.decor.house3.house3_facade,
+        TextureKey.decor.house3.house3_fenetre,
+        TextureKey.decor.house3.house3,
+        TextureKey.decor.house3.house3_porte,
+        TextureKey.decor.house3.house3_toit,
     ], 'decor/house3');
     this.preloadFromListKey([
-      TextureKey.decor.vache.vache_corps,
-      TextureKey.decor.vache.vache,
-      TextureKey.decor.vache.vache_tache1,
-      TextureKey.decor.vache.vache_tache2,
-      TextureKey.decor.vache.vache_tache3,
-      TextureKey.decor.vache.vache_tache4,
-      TextureKey.decor.vache.vache_tache5,
+        TextureKey.decor.vache.vache_corps,
+        TextureKey.decor.vache.vache,
+        TextureKey.decor.vache.vache_tache1,
+        TextureKey.decor.vache.vache_tache2,
+        TextureKey.decor.vache.vache_tache3,
+        TextureKey.decor.vache.vache_tache4,
+        TextureKey.decor.vache.vache_tache5,
     ], 'decor/vache');
+  }
+
+  private preloadPNJ() {
+    this.preloadFromListKey([
+        TextureKey.pnj.pnj_heureux_1,
+        TextureKey.pnj.pnj_heureux_2,
+        TextureKey.pnj.pnj_triste_1,
+        TextureKey.pnj.pnj_triste_2,
+    ], 'pnj')
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {

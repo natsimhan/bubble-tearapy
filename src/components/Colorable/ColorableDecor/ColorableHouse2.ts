@@ -20,7 +20,6 @@ export default class ColorableHouse2 extends ColorableDecor {
   createElementList(): void {
       this.elementList = [];
       for (let texture of treeTextureKeyList) {
-        console.debug('construct', texture);
         this.elementList.push( new ColorableDecorElement(
             this.scene,
             this.x,
