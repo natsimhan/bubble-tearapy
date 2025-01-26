@@ -1,5 +1,9 @@
 import {Scene} from 'phaser';
 
+export const UiConfig = {
+  fontFamily: '"DynaPuff", serif',
+};
+
 export const TextureKey = {
   ui: {
     button_blue: 'button_blue',
@@ -124,9 +128,12 @@ export class Preloader extends Scene {
     const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'background');
     bg.setScale(this.scale.width / bg.displayWidth);
 
-    const rect = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width * .8, this.scale.height * .1).setOrigin(.5).setStrokeStyle(1, 0xffffff);
+    const rect = this.add.rectangle(this.scale.width / 2, this.scale.height * .9, this.scale.width * .8, this.scale.height * .1).setOrigin(.5).setStrokeStyle(1, 0xffffff);
     const rectBounds = rect.getBounds();
     const bar = this.add.rectangle(rectBounds.left + 2, rectBounds.top + 2, rectBounds.width - 4, rectBounds.height - 4, 0xffffff).setOrigin(0);
+
+    // Précharger un texte invisible pour forcer le navigateur à charger la police
+    this.add.text(0, 0, '.', {font: '1px "DynaPuff", serif', color: '#000'}).setAlpha(0);
 
     this.load.on('progress', (progress: number) => {
       bar.width = 4 + ((rectBounds.width - 8) * progress);

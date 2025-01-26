@@ -16,15 +16,12 @@ export class MainMenu extends Scene {
   create() {
     this.add.image(this.scale.width / 2, this.scale.height / 2, 'background');
 
-    const width = this.scale.width;
-    const height = this.scale.height;
-
     this.music = this.sound.add('main_menu', {loop: true, volume: 0.5});
     this.music.play();
 
-    const playButton = new Button(this, width / 3, (2 * height) / 3, 'play', []);
-    const leaderBoardButton = new Button(this, (2 * width) / 3, (2 * height) / 3, 'leaderboard', []);
-    const creditsButton = new Button(this, width - width / 10, height - height / 10, 'credits', []);
+    const playButton = new Button(this, this.scale.width / 3, this.scale.height * .8, 'Play', []);
+    const leaderBoardButton = new Button(this, (2 * this.scale.width) / 3, this.scale.height * .8, 'Scores', []);
+    const creditsButton = new Button(this, this.scale.width * .9, this.scale.height * .95, 'Credits', []).setScale(.6);
 
     playButton.setDepth(1);
     leaderBoardButton.setDepth(1);

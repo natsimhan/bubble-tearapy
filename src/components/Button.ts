@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import {TextureKey} from "../scenes/Preloader.ts";
+import {TextureKey, UiConfig} from "../scenes/Preloader.ts";
 
 export default class Button extends Phaser.GameObjects.Container {
 
@@ -13,7 +13,7 @@ export default class Button extends Phaser.GameObjects.Container {
         0, 0,
         text,
         {
-          fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+          fontFamily: UiConfig.fontFamily, fontSize: 50, color: '#ffffff',
           stroke: '#000000', strokeThickness: 8,
           align: 'center'
         });
@@ -31,7 +31,7 @@ export default class Button extends Phaser.GameObjects.Container {
       rightWidth: 250,
       add: false,
     }).setOrigin(.5);
-    this.buttonNineSlice.setSize(nineSlideWidth * 4, 0).setScale(this.textButton.displayHeight * 2 / this.buttonNineSlice.displayHeight);
+    this.buttonNineSlice.setSize(nineSlideWidth * 4, 0).setScale(this.textButton.displayHeight * 1.5 / this.buttonNineSlice.displayHeight);
 
     this.add([
       this.buttonNineSlice,
