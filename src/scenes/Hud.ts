@@ -10,6 +10,12 @@ const BACKGROUND_PROGRESS_BAR_POSITION_Y = 70;
 const PROGRESS_BAR_POSITION_X = 750;
 const PROGRESS_BAR_POSITION_Y = 39;
 
+// background_gauge_0 : rouge #e32332
+// background_gauge_1 : Bleu  #8e17eb
+// background_gauge_2 : Vert  #2fe640
+// background_gauge_3 : Jaune #f8db1b
+// background_gauge_4 : Rose  #f649a8
+
 const PROGRESS_BAR_BACKGROUND_COLORS = [
   {
     color: 0xE32332,

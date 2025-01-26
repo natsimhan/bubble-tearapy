@@ -1,9 +1,8 @@
 import {Scene} from 'phaser';
 
 export const TextureKey = {
-  button: 'button',
-  logo: {
-    logo_bubble_teapay: 'logo_bubble_teapay',
+  ui: {
+    button_blue: 'button_blue',
   },
   bubbletea: {
     bubbletea: 'bubbletea',
@@ -37,16 +36,80 @@ export const TextureKey = {
       troncD: 'troncD',
       troncG: 'troncG',
     },
+    arbre2: {
+      arbre2_feuillage: 'arbre2_feuillage',
+      arbre2: 'arbre2',
+      arbre2_tronc: 'arbre2_tronc',
+    },
+    building: {
+      buiding_fenetre: 'buiding_fenetre',
+      buiding_fond: 'buiding_fond',
+      buiding: 'buiding',
+      buiding_porte: 'buiding_porte',
+    },
+    building2: {
+      building2_facade: 'building2_facade',
+      building2_fenetre: 'building2_fenetre',
+      building2: 'building2',
+      building2_porte: 'building2_porte',
+    },
+    buisson1: {
+      buisson_int: 'buisson_int',
+      buisson: 'buisson',
+    },
+    buisson2: {
+      buisson2_feuillage: 'buisson2_feuillage',
+      buisson2: 'buisson2',
+    },
+    chevre: {
+      chevre_corne: 'chevre_corne',
+      chevre_corps: 'chevre_corps',
+      chevre_museau: 'chevre_museau',
+      chevre_patte: 'chevre_patte',
+      chevre: 'chevre',
+      chevre_tache1: 'chevre_tache1',
+      chevre_tache2: 'chevre_tache2',
+      chevre_tache3: 'chevre_tache3',
+    },
+    house: {
+      house_facade: 'house_facade',
+      house_fenetre: 'house_fenetre',
+      house_mur: 'house_mur',
+      house: 'house',
+      house_porte: 'house_porte',
+      house_toit: 'house_toit',
+    },
+    house2: {
+      house2_facade: 'house2_facade',
+      house2_fenetre: 'house2_fenetre',
+      house2: 'house2',
+      house2_porte: 'house2_porte',
+      house2_toit: 'house2_toit',
+    },
+    house3: {
+      house3_facade: 'house3_facade',
+      house3_fenetre: 'house3_fenetre',
+      house3: 'house3',
+      house3_porte: 'house3_porte',
+      house3_toit: 'house3_toit',
+    },
+    vache: {
+      vache_corps: 'vache_corps',
+      vache: 'vache',
+      vache_tache1: 'vache_tache1',
+      vache_tache2: 'vache_tache2',
+      vache_tache3: 'vache_tache3',
+      vache_tache4: 'vache_tache4',
+      vache_tache5: 'vache_tache5',
+    },
   },
   hud: {
-    progress_bar_background_blue: 'progress_bar_background_blue_v2',
-    progress_bar_background_green: 'progress_bar_background_green_v2',
-    progress_bar_background_pink: 'progress_bar_background_pink_v2',
-    progress_bar_background_red: 'progress_bar_background_red_v2',
-    progress_bar_background_yellow: 'progress_bar_background_yellow_v2',
-    timer_background_blue: 'timer_background_blue_v1',
-    timer_background_pink: 'timer_background_pink_v1',
-    timer_background_purple: 'timer_background_purple_v1',
+    background_gauge_0: 'background_gauge_0',
+    background_gauge_1: 'background_gauge_1',
+    background_gauge_2: 'background_gauge_2',
+    background_gauge_3: 'background_gauge_3',
+    background_gauge_4: 'background_gauge_4',
+    timer_background_pink: 'timer_background_pink',
   },
   background: {
     bg1: 'parallax_bg2',
@@ -60,36 +123,31 @@ export class Preloader extends Scene {
   }
 
   init() {
-    this.add.image(512, 384, 'background');
+    const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'background');
+    bg.setScale(this.scale.width / bg.displayWidth);
 
-    this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
-    const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+    const rect = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, this.scale.width * .8, this.scale.height * .1).setOrigin(.5).setStrokeStyle(1, 0xffffff);
+    const rectBounds = rect.getBounds();
+    const bar = this.add.rectangle(rectBounds.left + 2, rectBounds.top + 2, rectBounds.width - 4, rectBounds.height - 4, 0xffffff).setOrigin(0);
 
     this.load.on('progress', (progress: number) => {
-      bar.width = 4 + (460 * progress);
+      bar.width = 4 + ((rectBounds.width - 8) * progress);
     });
   }
 
   preload() {
     this.load.setPath('assets');
-    this.load.atlas(TextureKey.button, 'button/nine-slice.png', 'button/nine-slice.json');
-    this.load.image('logo', 'logo.png');
-    this.preloadLogo();
-    this.preloadPlayer();
+
     this.preloadBubbleTea();
+    this.preloadDecor();
     this.preloadHud();
     this.preloadParallaxBackground();
-    this.preloadDecor();
+    this.preloadPlayer();
+    this.preloadUi();
   }
 
   create() {
-    this.scene.start('Game');
-  }
-
-  private preloadLogo() {
-    this.preloadFromListKey([
-      TextureKey.logo.logo_bubble_teapay
-    ], 'logo');
+    this.scene.start('MainMenu');
   }
 
   private preloadPlayer() {
@@ -118,32 +176,36 @@ export class Preloader extends Scene {
     ], 'bubbletea');
   }
 
+  private preloadUi() {
+    this.preloadFromListKey([
+      TextureKey.ui.button_blue,
+    ], 'ui');
+  }
+
   private preloadHud() {
     this.preloadFromListKey([
-      TextureKey.hud.progress_bar_background_blue,
-      TextureKey.hud.progress_bar_background_green,
-      TextureKey.hud.progress_bar_background_pink,
-      TextureKey.hud.progress_bar_background_red,
-      TextureKey.hud.progress_bar_background_yellow,
-      TextureKey.hud.timer_background_blue,
+      TextureKey.hud.background_gauge_0,
+      TextureKey.hud.background_gauge_1,
+      TextureKey.hud.background_gauge_2,
+      TextureKey.hud.background_gauge_3,
+      TextureKey.hud.background_gauge_4,
       TextureKey.hud.timer_background_pink,
-      TextureKey.hud.timer_background_purple,
     ], 'hud');
   }
 
   private preloadDecor() {
     this.preloadFromListKey([
-        TextureKey.decor.facade,
-        TextureKey.decor.roof,
-        TextureKey.decor.splash,
+      TextureKey.decor.facade,
+      TextureKey.decor.roof,
+      TextureKey.decor.splash,
     ], 'decor');
     this.preloadFromListKey([
-        TextureKey.decor.arbre.arbre,
-        TextureKey.decor.arbre.elementdroit,
-        TextureKey.decor.arbre.elementgauche,
-        TextureKey.decor.arbre.elementmilieu,
-        TextureKey.decor.arbre.troncD,
-        TextureKey.decor.arbre.troncG,
+      TextureKey.decor.arbre.arbre,
+      TextureKey.decor.arbre.elementdroit,
+      TextureKey.decor.arbre.elementgauche,
+      TextureKey.decor.arbre.elementmilieu,
+      TextureKey.decor.arbre.troncD,
+      TextureKey.decor.arbre.troncG,
     ], 'decor/arbre');
   }
 
@@ -152,7 +214,6 @@ export class Preloader extends Scene {
       this.load.image(imgKey, `${subpath}/${imgKey}.png`);
     }
   }
-
 
   private preloadParallaxBackground(): void {
     this.preloadFromListKey([
