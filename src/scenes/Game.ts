@@ -3,6 +3,7 @@ import Rng from '../domain/Rng.ts';
 import ColorableArea from '../components/Colorable/ColorableArea.ts';
 import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
+import {TextureKey} from './Preloader.ts';
 
 export class Game extends Scene {
   private rng: Rng;
@@ -32,12 +33,14 @@ export class Game extends Scene {
     this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
     this.music.play();
 
-    const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height);
+    const roadHeight = this.textures.get(TextureKey.background.road).get().height;
+
+    const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height - roadHeight / 4);
     player.setHeight(this.scale.height * .5);
 
     this.scene.launch('Hud');
 
-    this.areaTest = new ColorableArea(this, this.scale.width / 2, this.scale.height / 2, 10,  this.rng);
+    this.areaTest = new ColorableArea(this, this.scale.width / 2, this.scale.height / 2, 10, this.rng);
 
 
     this.input.on('pointerup', (pointer) => {

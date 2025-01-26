@@ -37,13 +37,15 @@ export default class PlayerWithBubbleTeas {
 
     this.playerCharacter.setPosition(this.x, this.y);
 
-    this.bubbleTeaStockList[0]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .699, this.playerCharacter.getPlayerImageBounds().height * 1.91);
-    this.bubbleTeaStockList[1]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .8745, this.playerCharacter.getPlayerImageBounds().height * 1.91);
-    this.bubbleTeaStockList[2]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * 1.05, this.playerCharacter.getPlayerImageBounds().height * 1.91);
+    const verticalOffset = this.playerCharacter.getBounds().bottom - this.scene.scale.height;
 
-    this.bubbleTeaActifList[0]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .699, this.playerCharacter.getPlayerImageBounds().height * 1.727);
-    this.bubbleTeaActifList[1]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .8745, this.playerCharacter.getPlayerImageBounds().height * 1.727);
-    this.bubbleTeaActifList[2]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * 1.05, this.playerCharacter.getPlayerImageBounds().height * 1.727);
+    this.bubbleTeaStockList[0]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .699, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.91);
+    this.bubbleTeaStockList[1]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .8745, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.91);
+    this.bubbleTeaStockList[2]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * 1.05, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.91);
+
+    this.bubbleTeaActifList[0]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .699, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.727);
+    this.bubbleTeaActifList[1]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * .8745, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.727);
+    this.bubbleTeaActifList[2]?.move(this.playerCharacter.x + this.playerCharacter.getPlayerImageBounds().width * 1.05, verticalOffset + this.playerCharacter.getPlayerImageBounds().height * 1.727);
   }
 
   public setHeight(height: number) {

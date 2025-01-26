@@ -114,8 +114,14 @@ export const TextureKey = {
     timer_background_pink: 'timer_background_pink',
   },
   background: {
-    bg1: 'parallax_bg2',
-    bg2: 'parallax_bg1',
+    parallax_bg1: 'parallax_bg1',
+    parallax_bg2: 'parallax_bg2',
+    parallax_bg3: 'parallax_bg3',
+    parallax_bg4: 'parallax_bg4',
+    plant1: 'plant1',
+    plant2: 'plant2',
+    plant3: 'plant3',
+    road: 'road',
   }
 };
 
@@ -152,7 +158,8 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.scene.start('MainMenu');
+    // this.scene.start('MainMenu'); todo P0 !!!!!!!!!!!
+    this.scene.start('Game');
   }
 
   private preloadPlayer() {
@@ -220,8 +227,14 @@ export class Preloader extends Scene {
 
   private preloadParallaxBackground(): void {
     this.preloadFromListKey([
-      TextureKey.background.bg1,
-      TextureKey.background.bg2,
+      TextureKey.background.parallax_bg1,
+      TextureKey.background.parallax_bg2,
+      TextureKey.background.parallax_bg3,
+      TextureKey.background.parallax_bg4,
+      TextureKey.background.plant1,
+      TextureKey.background.plant2,
+      TextureKey.background.plant3,
+      TextureKey.background.road,
     ], 'background');
   }
 }

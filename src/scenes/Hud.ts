@@ -1,5 +1,6 @@
 import {Scene} from 'phaser';
 import {TextureKey} from './Preloader.ts';
+import ColorList from '../domain/ColorList.ts';
 
 const TIMMER_POSITION_X = 150;
 const TIMMER_POSITION_Y = 60;
@@ -18,28 +19,28 @@ const PROGRESS_BAR_POSITION_Y = 39;
 
 const PROGRESS_BAR_BACKGROUND_COLORS = [
   {
-    color: 0xE32332,
-    asset: TextureKey.hud.progress_bar_background_red,
+    color: ColorList.h2n('#E32332'),
+    asset: TextureKey.hud.background_gauge_0,
     position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 7, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 3}
   },
   {
     color: 0x8E17EB,
-    asset: TextureKey.hud.progress_bar_background_blue,
+    asset: TextureKey.hud.background_gauge_1,
     position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 3, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6.4}
   },
   {
     color: 0x2FE640,
-    asset: TextureKey.hud.progress_bar_background_green,
+    asset: TextureKey.hud.background_gauge_2,
     position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 4}
   },
   {
     color: 0xF649A8,
-    asset: TextureKey.hud.progress_bar_background_pink,
+    asset: TextureKey.hud.background_gauge_3,
     position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6}
   },
   {
     color: 0xF8DB1B,
-    asset: TextureKey.hud.progress_bar_background_yellow,
+    asset: TextureKey.hud.background_gauge_4,
     position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 11, y: BACKGROUND_PROGRESS_BAR_POSITION_Y}
   }
 ];
@@ -68,11 +69,11 @@ export class Hud extends Scene {
     this.timerBackground = this.add.sprite(
         TIMMER_POSITION_X,
         TIMMER_POSITION_Y,
-        TIMER_BACKGROUNDS[0].asset
+        TextureKey.hud.timer_background_pink
     );
     this.timerBackground.setScale(0.2);
     this.timerBackground.setOrigin(0.5, 0.5);
-    this.currentTimerAsset = TIMER_BACKGROUNDS[0].asset;
+    this.currentTimerAsset = TextureKey.hud.timer_background_pink;
 
     this.timerText = this.add.text(
         TIMMER_POSITION_X,
@@ -112,20 +113,6 @@ export class Hud extends Scene {
 
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     this.timerText.setText(formattedTime);
-
-    this.updateTimerBackground(elapsedTime);
-  }
-
-  updateTimerBackground(elapsedTime: number) {
-    const timerData = TIMER_BACKGROUNDS.find((data, index) => {
-      const nextData = TIMER_BACKGROUNDS[index + 1];
-      return elapsedTime >= data.time && (!nextData || elapsedTime < nextData.time);
-    }) || TIMER_BACKGROUNDS[0];
-
-    if (this.currentTimerAsset !== timerData.asset) {
-      this.currentTimerAsset = timerData.asset;
-      this.timerBackground.setTexture(timerData.asset);
-    }
   }
 
   updateProgressBar() {
