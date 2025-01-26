@@ -10,13 +10,13 @@ export default class PlayerWithBubbleTeas {
     this.bubbleTeaActifList = [];
     this.bubbleTeaStockList = [];
 
-    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), true));
-    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), true));
-    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), true));
+    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, null));
+    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, null));
+    this.bubbleTeaStockList.push(new BubbleTea(this.scene, 0, 0, null));
 
-    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), false));
-    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), false));
-    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.getRandomColor(), false));
+    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.bubbleTeaStockList[0]));
+    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.bubbleTeaStockList[1]));
+    this.bubbleTeaActifList.push(new BubbleTea(this.scene, 0, 0, this.bubbleTeaStockList[2]));
 
     this.playerCharacter = new PlayerCharacter(this.scene, this.x + 400, this.y);
 
@@ -48,15 +48,10 @@ export default class PlayerWithBubbleTeas {
 
   public setHeight(height: number) {
     this.playerCharacter.setHeight(height);
-    this.move(this.x, this.y);
     for (const bubbleTea of [...this.bubbleTeaActifList, ...this.bubbleTeaStockList]) {
       bubbleTea.setHeight(height * .17);
     }
+    this.move(this.x, this.y);
   }
 
-
-  private getRandomColor(): number {
-    // Génère une couleur aléatoire entre 0x000000 et 0xFFFFFF
-    return Math.floor(Math.random() * 0xFFFFFF);
-  }
 }

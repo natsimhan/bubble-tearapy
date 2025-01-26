@@ -4,8 +4,6 @@ export const TextureKey = {
   button: 'button',
   bubbletea: {
     bubbletea: 'bubbletea',
-    bubbletea_bottom: 'bubbletea_bottom',
-    bubbletea_top: 'bubbletea_top',
     cup: 'cup',
     cup_cover: 'cup_cover',
     cup_full: 'cup_full',
@@ -51,7 +49,7 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.scene.start('Intro');
+    this.scene.start('Game');
   }
 
   private preloadPlayer() {
@@ -73,8 +71,6 @@ export class Preloader extends Scene {
   private preloadBubbleTea() {
     this.preloadFromListKey([
       TextureKey.bubbletea.bubbletea,
-      TextureKey.bubbletea.bubbletea_bottom,
-      TextureKey.bubbletea.bubbletea_top,
       TextureKey.bubbletea.cup,
       TextureKey.bubbletea.cup_cover,
       TextureKey.bubbletea.cup_full,
