@@ -1,11 +1,11 @@
 import ColorableDecorElement from "./ColorableDecorElement.ts";
 import * as Phaser from 'phaser';
-import Rectangle = Phaser.Geom.Rectangle;
 
 export default class ColorableDecor {
 
     protected scene: Phaser.Scene;
-    protected elementList?: ColorableDecorElement[];
+    protected elementList: ColorableDecorElement[];
+    protected elementBorder?: ColorableDecorElement;
     protected x: number;
     protected y: number;
     protected height: number;
@@ -19,16 +19,35 @@ export default class ColorableDecor {
         this.height = height;
         this.width = width;
         this.createElementList();
+        this.createElementBorder();
     }
 
     createElementList(): void {
       this.elementList = [];
     }
 
+    createElementBorder(): void {
+      this.elementBorder = undefined;
+    }
+
+    getBounds(): Phaser.Geom.Rectangle {
+      return this.elementList[0].getBounds();
+    }
+
   setDpeth(depth: number) {
     this.depth = depth;
-    this.elementList?.forEach((element) => {
+    this.elementList.forEach((element) => {
       element.setDepth(depth);
     })
+    this.elementBorder?.setDepth(depth + 2)
+  }
+
+  receiveBubble(color: number, size: number, x: number, y: number): void {
+      for (let element of this.elementList) {
+        if (element.isPointInElement(x, y)) {
+          element.receiveBubble(color, size, x, y);
+          break;
+        }
+      }
   }
 }

@@ -28,10 +28,9 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
   }
 
   isPointInElement(xWorld: number, yWorld: number): boolean {
-    const xLocal = xWorld - this.getBounds().x / this.getBounds().width * this.texture.get().width;
-    const yLocal = yWorld - this.getBounds().y / this.getBounds().height * this.texture.get().height;
+    const xLocal = (xWorld - this.getBounds().left) / this.getBounds().width * this.texture.get().width;
+    const yLocal = (yWorld - this.getBounds().top) / this.getBounds().height * this.texture.get().height;
     const pixel = this.scene.textures.getPixelAlpha(xLocal, yLocal, this.#textureKey, 0);
-    console.debug('pixel is ', pixel);
     return (pixel > 0);
   }
 
@@ -43,6 +42,7 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
         const newSplash = this.scene.add.image(x, y, TextureKey.decor.splash);
         newSplash.setScale(size / newSplash.width, size / newSplash.height);
         newSplash.setTint(color);
+        newSplash.setDepth(this.depth + 1);
         this.#splashList.push(newSplash);
       } else {
         this.removeSplashes();

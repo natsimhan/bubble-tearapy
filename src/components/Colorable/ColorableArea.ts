@@ -31,6 +31,7 @@ export default class ColorableArea {
     this.#decorFactory = new DecorFactory();
     this.#colorableDecorList = [];
     this.generateDecorList();
+    this.setDepth(this.#depth);
   }
 
   generateDecorList() {
@@ -38,23 +39,42 @@ export default class ColorableArea {
     const leftBound = this.#x - this.#width / 2;
     let minX = leftBound;
     for (let i = 0; i < this.#decorNb; i++) {
-      let maxX = leftBound + this.#width - (this.#decorNb - i - 1) * this.#decorMinWidth;
-      let xRight = this.#rng.realBetween(minX + this.#decorMinWidth, maxX);
-      let decorWidth = this.#rng.realBetween(this.#decorMinWidth, xRight - minX);
-      let xDecor = this.#rng.realBetween(minX + decorWidth / 2, xRight - decorWidth / 2);
-      let yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10)
+      const maxX = leftBound + this.#width - (this.#decorNb - i - 1) * this.#decorMinWidth;
+      const xRight = this.#rng.realBetween(minX + this.#decorMinWidth, maxX);
+      const decorWidth = this.#rng.realBetween(this.#decorMinWidth, xRight - minX);
+      const xDecor = this.#rng.realBetween(minX + decorWidth / 2, xRight - decorWidth / 2);
+      const yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10)
       this.#colorableDecorList.push(this.#decorFactory.createDecor(
           this.#scene,
           xDecor,
           yDecor,
           this.#rng.realBetween(this.#scene.scale.height / 4, yDecor),
           decorWidth,
-          DecorKey.building
+          DecorKey.tree
       ));
       minX = xRight;
     }
-
   }
+
+  setDepth(depth: number) {
+    this.#colorableDecorList.forEach((decor) => {
+      decor.setDpeth(depth);
+    })
+  }
+
+  receivedBubble(color: number, size: number, x: number, y: number) {
+    for (let decor of this.#colorableDecorList) {
+      const bounds = decor.getBounds();
+      if (
+          x >= bounds.left && x <= bounds.right &&
+          y >= bounds.top && y <= bounds.bottom
+      ) {
+        decor.receiveBubble(color, size, x, y);
+        break;
+      }
+    }
+  }
+
 
 
 }
