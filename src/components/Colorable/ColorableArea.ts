@@ -47,10 +47,10 @@ export default class ColorableArea {
 
   constructor(scene: Phaser.Scene, x: number, y: number, depth: number, rng: Rng) {
     this.#scene = scene;
-    this.#x = x;
-    this.#y = y;
     this.#heigth = this.#scene.scale.height;
     this.#width = this.#scene.scale.width;
+    this.#x = x + this.#width / 2;
+    this.#y = this.#scene.scale.height * 2 / 3;
     this.#depth = depth;
     this.#rng = rng;
     this.#decorFullNb = 0;
