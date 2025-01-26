@@ -5,20 +5,26 @@ import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 import {TextureKey} from './Preloader.ts';
 
+const MINIMAL_SPEED = 0.05;
+
 export class Game extends Scene {
   private rng: Rng;
 
-  camera: Phaser.Cameras.Scene2D.Camera;
-  background: Phaser.GameObjects.Image;
-  music: Sound.BaseSound;
+  private music: Sound.BaseSound;
   private parallax: Parallax;
-  areaTest: ColorableArea;
+  private areaTest: ColorableArea;
+
+  private speed: number;
+  private speedLastSlower: number;
 
   constructor() {
     super('Game');
     // this.rng = new Rng('BubbleTearapy');
     // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
     this.rng = new Rng('ea9c37de09');
+
+    this.speed = MINIMAL_SPEED;
+    this.speedLastSlower = 0;
   }
 
   preload() {
@@ -26,64 +32,61 @@ export class Game extends Scene {
   }
 
   create() {
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x333333);
+    this.speed = MINIMAL_SPEED;
+    this.speedLastSlower = this.time.now;
+    this.scene.launch('Hud');
+
     this.parallax = new Parallax(this);
 
     this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
     this.music.play();
+    this.events.once('shutdown', () => {
+      this.music.stop();
+    });
 
     const roadHeight = this.textures.get(TextureKey.background.road).get().height;
-
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height - roadHeight / 4);
     player.setHeight(this.scale.height * .5);
 
-    this.scene.launch('Hud');
-
     this.areaTest = new ColorableArea(this, this.scale.width / 2, this.scale.height / 2, 10, this.rng);
-
-
     this.input.on('pointerup', (pointer) => {
-      const diceResult = this.rng.rollADice();
       this.areaTest.receivedBubble(0x123456, 50, pointer.worldX, pointer.worldY);
-
-      if (diceResult === 100) {
-        this.events.once('shutdown', () => {
-          this.music.stop();
-        });
-        this.scene.start('GameOver', {timer: 150});
-        this.scene.stop('Hud')
-      }
     });
 
-
-    this.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
+    this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
       switch (event.code) {
-        case 'ArrowUp':
-
-          break;
-        case 'ArrowDown':
-
-          break;
-        case 'ArrowLeft':
-          player.move(player.getX() - 10, player.getY());
-          break;
-        case 'ArrowRight':
-          player.move(player.getX() + 10, player.getY());
-          break;
-        case 'NumpadAdd':
-          break;
-        case 'NumpadSubtract':
+        case 'Space':
+          const oldSpeed = this.speed;
+          const finalSpeed = Math.min(MINIMAL_SPEED * 10, this.speed * 1.5);
+          this.tweens.addCounter({
+            from: 0,
+            to: 100,
+            duration: 300,
+            ease: 'Linear',
+            onUpdate: (tween) => {
+              const percent = tween.getValue() / 100;
+              this.speed = oldSpeed + percent * (finalSpeed - oldSpeed);
+            }
+          });
           break;
         default:
-          console.debug(event.code);
+          // console.debug(event.code);
           break;
       }
     });
   }
 
-  update(): void {
-    this.parallax.update();
+  update(time: number): void {
+    if (this.speed > MINIMAL_SPEED && time - this.speedLastSlower > 100) {
+      this.speed = Math.max(MINIMAL_SPEED, this.speed * .9);
+      this.speedLastSlower = time;
+    }
+    this.parallax.update(this.speed);
+  }
+
+  private gameOver(): void {
+    this.scene.stop('Hud');
+    this.scene.start('GameOver', {timer: 150});
   }
 
 }

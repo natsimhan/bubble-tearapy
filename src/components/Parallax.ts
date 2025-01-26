@@ -1,12 +1,10 @@
 import {TextureKey} from '../scenes/Preloader.ts';
 import Phaser from 'phaser';
 
-
 export default class Parallax {
 
   private scene: Phaser.Scene;
   private backgroundList: Phaser.GameObjects.TileSprite[];
-  private speed: number = .02;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -37,15 +35,11 @@ export default class Parallax {
     }
   }
 
-  update(): void {
-    let velocity = this.speed;
+  update(speed: number): void {
+    let velocity = speed;
     for (const bg of this.backgroundList) {
       bg.tilePositionX += velocity;
       velocity *= 4;
     }
-  }
-
-  updateSpeed(speed: number): void {
-    this.speed = speed;
   }
 }
