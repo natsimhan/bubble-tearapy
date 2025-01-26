@@ -15,7 +15,9 @@ export class Game extends Scene {
 
   constructor() {
     super('Game');
-    this.rng = new Rng('BubbleTearapy');
+    // this.rng = new Rng('BubbleTearapy');
+    // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
+    this.rng = new Rng('ea9c37de09');
   }
 
   preload() {
@@ -35,10 +37,12 @@ export class Game extends Scene {
 
     this.scene.launch('Hud');
 
-    this.areaTest = new ColorableArea(this, 500, 300, 10, this.rng);
+    this.areaTest = new ColorableArea(this, this.scale.width / 2, this.scale.height / 2, 10,  this.rng);
 
-    this.input.on('pointerup', () => {
+
+    this.input.on('pointerup', (pointer) => {
       const diceResult = this.rng.rollADice();
+      this.areaTest.receivedBubble(0x123456, 50, pointer.worldX, pointer.worldY);
 
       if (diceResult === 100) {
         this.events.once('shutdown', () => {

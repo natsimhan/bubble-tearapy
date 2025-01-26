@@ -1,6 +1,5 @@
 import {TextureKey} from '../../../scenes/Preloader.ts';
 
-const WIN_PROPORTION = 0.8;
 
 export default class ColorableDecorElement extends Phaser.GameObjects.Image {
 
@@ -11,6 +10,7 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
   #isElementFull: boolean;
   #textureKey: string;
   #splashList: Phaser.GameObjects.Image[];
+  #pixelOccupationRatio;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, height: number, width: number) {
     super(scene, x, y, texture);
@@ -22,9 +22,11 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     this.#isElementFull = false;
     this.#textureKey = texture;
     this.#splashList = [];
+    this.#pixelOccupationRatio = 0;
     this.setScale(this.#displayWidth / this.width, this.#displayHeight / this.height);
     this.setOrigin(0.5, 1);
     this.scene.add.existing(this);
+    this.computePixelOccupationRatio();
   }
 
   isPointInElement(xWorld: number, yWorld: number): boolean {
@@ -34,9 +36,10 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     return (pixel > 0);
   }
 
-  public receiveBubble(color: number, size: number, x: number, y: number) {
+  receiveBubble(color: number, size: number, x: number, y: number) {
     if (!this.#isElementFull) {
-      this.#colorReceived.set(color, size / this.displayHeight * this.displayHeight + this.getCurrentSizeByColor(color));
+      console.debug('size', size);
+      this.#colorReceived.set(color, size * size + this.getCurrentSizeByColor(color));
       this.#isElementFull = this.checkElementFull();
       if (!this.#isElementFull) {
         const newSplash = this.scene.add.image(x, y, TextureKey.decor.splash);
@@ -60,7 +63,12 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
   }
 
   checkElementFull(): boolean {
-    return this.#totalAreaCovered > this.displayHeight * this.displayHeight * WIN_PROPORTION;
+    let areaCovered: number = 0;
+    this.#colorReceived.forEach((size, color) => {
+      areaCovered += size;
+    });
+    this.#totalAreaCovered = areaCovered;
+    return this.#totalAreaCovered > this.displayWidth * this.displayHeight * this.#pixelOccupationRatio;
   }
 
   getMaxColor(): number {
@@ -79,5 +87,21 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     this.#splashList.forEach((splash) => {
       splash.setAlpha(0);
     })
+  }
+
+  computePixelOccupationRatio() {
+    const xOffset = Math.floor(this.texture.get().width / 10);
+    const yOffset = Math.floor(this.texture.get().height / 10);
+
+    for (let pixelX = 0; pixelX < this.texture.get().width; pixelX += xOffset) {
+      for (let pixelY = 0; pixelY < this.texture.get().height; pixelY += yOffset) {
+        const pixel = this.scene.textures.getPixelAlpha(pixelX, pixelY, this.#textureKey, 0);
+        if (pixel > 0) {
+          this.#pixelOccupationRatio += 0.01;
+        }
+      }
+    }
+    console.debug('element', this.#textureKey);
+    console.debug('pixel ratio', this.#pixelOccupationRatio);
   }
 }

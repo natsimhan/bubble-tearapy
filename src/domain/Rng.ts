@@ -9,6 +9,7 @@ export default class Rng {
       seed = this.generateRandomSeedHash();
     }
     this.seed = seed;
+    console.debug(this.seed);
     this.rng = new Phaser.Math.RandomDataGenerator([seed]);
   }
 
