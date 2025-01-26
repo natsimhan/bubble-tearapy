@@ -25,6 +25,19 @@ export const TextureKey = {
     player_leg_right_up: 'player_leg_right_up',
     sarbapaille: 'sarbapaille',
   },
+  decor: {
+    facade: 'facade',
+    roof: 'roof',
+    splash: 'splash',
+    arbre: {
+      arbre: 'arbre',
+      elementdroit: 'elementdroit',
+      elementgauche: 'elementgauche',
+      elementmilieu: 'elementmilieu',
+      troncD: 'troncD',
+      troncG: 'troncG',
+    },
+  },
   hud: {
     progress_bar_background_blue: 'progress_bar_background_blue_v2',
     progress_bar_background_green: 'progress_bar_background_green_v2',
@@ -66,6 +79,7 @@ export class Preloader extends Scene {
     this.preloadBubbleTea();
     this.preloadHud();
     this.preloadParallaxBackground();
+    this.preloadDecor();
   }
 
   create() {
@@ -115,6 +129,22 @@ export class Preloader extends Scene {
       TextureKey.hud.timer_background_pink,
       TextureKey.hud.timer_background_purple,
     ], 'hud');
+  }
+
+  private preloadDecor() {
+    this.preloadFromListKey([
+        TextureKey.decor.facade,
+        TextureKey.decor.roof,
+        TextureKey.decor.splash,
+    ], 'decor');
+    this.preloadFromListKey([
+        TextureKey.decor.arbre.arbre,
+        TextureKey.decor.arbre.elementdroit,
+        TextureKey.decor.arbre.elementgauche,
+        TextureKey.decor.arbre.elementmilieu,
+        TextureKey.decor.arbre.troncD,
+        TextureKey.decor.arbre.troncG,
+    ], 'decor/arbre');
   }
 
   private preloadFromListKey(listKey: string[], subpath: string) {
