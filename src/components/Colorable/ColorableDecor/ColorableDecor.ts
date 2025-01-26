@@ -11,6 +11,8 @@ export default class ColorableDecor {
     protected height: number;
     protected width: number;
     protected depth: number;
+    protected elementFullNb: number;
+    protected isFull: boolean;
 
     constructor(scene: Phaser.Scene, x: number, y: number, height: number, width: number) {
         this.scene = scene;
@@ -18,6 +20,8 @@ export default class ColorableDecor {
         this.y = y;
         this.height = height;
         this.width = width;
+        this.elementFullNb = 0;
+        this.isFull = false;
         this.createElementList();
         this.createElementBorder();
     }
@@ -42,12 +46,21 @@ export default class ColorableDecor {
     this.elementBorder?.setDepth(depth + 2)
   }
 
-  receiveBubble(color: number, size: number, x: number, y: number): void {
-      for (let element of this.elementList) {
-        if (element.isPointInElement(x, y)) {
-          element.receiveBubble(color, size, x, y);
-          break;
+  receiveBubble(color: number, size: number, x: number, y: number): boolean {
+      if (!this.isFull) {
+        for (let element of this.elementList) {
+          if (element.isPointInElement(x, y)) {
+            if (element.receiveBubble(color, size, x, y)) {
+              this.elementFullNb += 1;
+            }
+            break;
+          }
         }
+        if (this.elementFullNb === this.elementList.length) {
+          this.isFull = true;
+        }
+        return this.isFull;
       }
+    return false;
   }
 }
