@@ -4,6 +4,7 @@ import ColorableArea from '../components/Colorable/ColorableArea.ts';
 import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 import {AudioKey, TextureKey} from './Preloader.ts';
+import {Hud} from './Hud.ts';
 
 const MINIMAL_SPEED = 0.05;
 
@@ -19,11 +20,9 @@ export class Game extends Scene {
 
   constructor() {
     super('Game');
-    // this.rng = new Rng('BubbleTearapy');
     // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
-    this.rng = new Rng('c53b9c667f');//'ea9c37de09');
-
-    // 'c53b9c667f' : le seed des chèvres :)
+    // this.rng = new Rng('c53b9c667f'); // le seed des chèvres :)
+    this.rng = new Rng();
 
     this.speed = MINIMAL_SPEED;
     this.speedLastSlower = 0;
@@ -46,10 +45,14 @@ export class Game extends Scene {
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height - roadHeight / 4);
     player.setHeight(this.scale.height * .5);
 
-    this.areaTest = new ColorableArea(this, this.scale.width * 0.0001, this.scale.height, -10, this.rng);
-    // this.input.on('pointerup', (pointer) => {
-    //   this.areaTest.receivedBubble(0x123456, 50, pointer.worldX, pointer.worldY);
-    // });
+    this.areaTest = new ColorableArea(this, this.scale.width * 0.0001, this.scale.height * .95, -10, this.rng);
+
+    this.input.on('Hud:updateProgressBar', (percentVictory: number) => {
+      const hudScene = this.scene.get('Hud') as Hud;
+      if (hudScene) {
+        hudScene.updateProgressToVictory(percentVictory);
+      }
+    });
 
     this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
       switch (event.code) {

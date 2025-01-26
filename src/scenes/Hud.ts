@@ -35,7 +35,7 @@ export class Hud extends Scene {
   private progress: number = 0;
 
   constructor() {
-    super('Hud');
+    super({key: 'Hud', active: false});
   }
 
   create() {
@@ -61,26 +61,36 @@ export class Hud extends Scene {
     );
     this.timerText.setOrigin(0.5, 0.5).setScale(timerBounds.height / this.timerText.displayHeight * .4);
 
+    this.progressBar = this.add.graphics();
+
     this.progressBarBackground = this.add.sprite(
-        this.scale.width * .8,
+        this.scale.width * .85,
         this.scale.height * .1,
         PROGRESS_BAR_BACKGROUND_COLORS[0].asset
     );
-    this.progressBarBackground.setScale(0.3);
-    this.progressBarBackground.setOrigin(0.5, 0.5);
+    this.progressBarBackground.setScale(0.4);
+    this.progressBarBackground.setOrigin(0.5);
 
-    this.progressBar = this.add.graphics();
-    this.progressBar.fillStyle(PROGRESS_BAR_BACKGROUND_COLORS[0].color, 1);
+
+    this.startTime = Date.now();
+    this.progress = 0;
     this.updateProgressBar();
 
-    this.startTime = this.time.now;
-    this.progress = 0
-    ;
-    this.updateProgressBar();
+    // Pour debug la progress bar sur 30s
+    // this.tweens.addCounter({
+    //   from: 0,
+    //   to: 100,
+    //   duration: 10_000,
+    //   ease: 'Linear',
+    //   onUpdate: (tween) => {
+    //     const p = tween.getValue() / 100;
+    //     this.updateProgress(p);
+    //   },
+    // })
   }
 
   update(time: number) {
-    const elapsedTime = Math.floor((time - this.startTime) / 1000);
+    const elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
 
@@ -96,27 +106,25 @@ export class Hud extends Scene {
     const progressData = PROGRESS_BAR_BACKGROUND_COLORS[index];
 
     // Mettre à jour la texture et les positions spécifiques
-    this.progressBar.fillStyle(progressData.color, 1);
     this.progressBarBackground.setTexture(progressData.asset);
-    this.progressBarBackground.setPosition(
-        this.scale.width * .8,
-        this.scale.height * .1
-    );
 
     // Dessiner la barre de progression si nécessaire
     if (this.progress > 0) {
+      const pBgBounds = this.progressBarBackground.getBounds();
+
+      this.progressBar.fillStyle(progressData.color, 1);
       this.progressBar.fillRoundedRect(
-          this.scale.width * .8,
-          this.scale.height * .1,
-          this.progress * 225,
-          39,
+          pBgBounds.left + pBgBounds.width * .25,
+          pBgBounds.top + pBgBounds.height * .4,
+          pBgBounds.width * .6 * this.progress,
+          pBgBounds.height * .2,
           10
       );
     }
   }
 
-  updateProgress(amount: number) {
-    this.progress = Phaser.Math.Clamp(this.progress + amount, 0, 1);
+  public updateProgressToVictory(percentVictory: number) {
+    this.progress = Phaser.Math.Clamp(percentVictory, 0.1, 1);
     this.updateProgressBar();
   }
 

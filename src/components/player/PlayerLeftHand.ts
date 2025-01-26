@@ -109,17 +109,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
         ease: 'Cubic.easeOut',
         onComplete: () => {
           this.scene.input.emit('ColorableArea:receivedBubble', finalColor, finalPower, worldPoint.x, worldPoint.y);
-              ball.destroy();
-          // this.scene.tweens.add({
-          //   targets: ball,
-          //   scale: 5 * finalPower,
-          //   x: worldPoint.x - this.scene.scale.width / 2,
-          //   alpha: 0,
-          //   duration: 1000,
-          //   ease: 'Linear',
-          //   onComplete: () => {
-          //   },
-          // });
+          ball.destroy();
         },
       });
     }

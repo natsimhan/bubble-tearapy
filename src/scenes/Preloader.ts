@@ -199,8 +199,8 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.scene.start('MainMenu'); // todo P0 !!!!!!!!!!!
-    // this.scene.start('Game');
+    // this.scene.start('MainMenu'); // todo P0 !!!!!!!!!!!
+    this.scene.start('Game');
   }
 
   private preloadPlayer() {

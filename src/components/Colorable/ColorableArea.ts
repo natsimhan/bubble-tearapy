@@ -86,7 +86,6 @@ export default class ColorableArea {
     this.setDepth(this.#depth);
 
     this.#scene.input.on('ColorableArea:receivedBubble', (color: number, power: number, worldX: number, worldY: number) => {
-      console.debug('ColorableArea:receivedBubble');
       this.receivedBubble(color, power * 100, worldX, worldY);
     });
   }
@@ -121,6 +120,7 @@ export default class ColorableArea {
       const decorWidth = this.#rng.realBetween(this.#decorMinWidth, xRight - minX);
       const xDecor = this.#rng.realBetween(minX + decorWidth / 2, xRight - decorWidth / 2);
       const yDecor = this.#rng.realBetween(this.#y, this.#y - this.#heigth / 10);
+      const decorHeight = this.#rng.realBetween(this.#scene.scale.height / 2, yDecor) ;
       const texture: string = biome[this.#rng.between(0, biome.length - 1)];
       let textureMultiplier = decorSizeRelation.get(texture);
       if (!textureMultiplier) {
@@ -130,7 +130,7 @@ export default class ColorableArea {
           this.#scene,
           xDecor,
           yDecor,
-          this.#rng.realBetween(this.#scene.scale.height / 2, yDecor) * textureMultiplier,
+          decorHeight * textureMultiplier,
           decorWidth,
           texture
       ));
@@ -160,11 +160,14 @@ export default class ColorableArea {
           if (!this.#isPnjHappy && this.#decorFullNb === this.#decorNb) {
             this.#isPnjHappy = true;
             this.#pnjList[0].switchToHappy();
+            this.#scene.input.emit('Game:victoire');
           }
         }
         break;
       }
     }
+    console.debug('????');
+    this.#scene.input.emit('Hud:updateProgressBar', this.getAreaScore());
   }
 
   getAreaScore(): number {
