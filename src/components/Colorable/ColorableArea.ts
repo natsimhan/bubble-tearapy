@@ -16,6 +16,7 @@ export default class ColorableArea {
   #decorMinWidth;
   #decorFactory: DecorFactory;
   #decorNb: number;
+  #decorFullNb: number;
   #colorableDecorList: ColorableDecor[];
 
 
@@ -27,6 +28,8 @@ export default class ColorableArea {
     this.#width = this.#scene.scale.width;
     this.#depth = depth;
     this.#rng = rng;
+    this.#decorFullNb = 0;
+    this.#decorNb = 0;
     this.#decorMinWidth = this.#scene.scale.width / 10;
     this.#decorFactory = new DecorFactory();
     this.#colorableDecorList = [];
@@ -69,10 +72,16 @@ export default class ColorableArea {
           x >= bounds.left && x <= bounds.right &&
           y >= bounds.top && y <= bounds.bottom
       ) {
-        decor.receiveBubble(color, size, x, y);
+        if (decor.receiveBubble(color, size, x, y)) {
+          this.#decorFullNb += 1;
+        }
         break;
       }
     }
+  }
+
+  getAreaScore(): number {
+    return (this.#decorFullNb / this.#decorNb)
   }
 
 

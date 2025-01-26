@@ -36,7 +36,7 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     return (pixel > 0);
   }
 
-  receiveBubble(color: number, size: number, x: number, y: number) {
+  receiveBubble(color: number, size: number, x: number, y: number): boolean {
     if (!this.#isElementFull) {
       console.debug('size', size);
       this.#colorReceived.set(color, size * size + this.getCurrentSizeByColor(color));
@@ -50,8 +50,10 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
       } else {
         this.removeSplashes();
         this.setTint(this.getMaxColor());
+        return true;
       }
     }
+    return false;
   }
 
   getCurrentSizeByColor(color: number): number {
@@ -101,7 +103,5 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
         }
       }
     }
-    console.debug('element', this.#textureKey);
-    console.debug('pixel ratio', this.#pixelOccupationRatio);
   }
 }
