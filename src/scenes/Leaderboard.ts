@@ -50,7 +50,6 @@ export default class Leaderboard extends Scene {
 
   displayLeaderboard(): void {
     const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []);
-    this.add.existing(mainMenuButton);
     mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
@@ -120,10 +119,8 @@ export default class Leaderboard extends Scene {
 
     // Créer les boutons
     const submitButton = new Button(this, (width) / 2, (2 * height) / 3.5, 'Submit', []);
-    this.add.existing(submitButton);
 
     const skipButton = new Button(this, (width) / 2, (2 * height) / 2.5, 'Continue without submitting', []);
-    this.add.existing(skipButton);
 
     submitButton.onClickButton('pointerup', () => {
       const enteredName = input.value.trim() || 'Player';

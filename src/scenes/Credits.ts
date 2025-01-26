@@ -18,7 +18,7 @@ export default class Credits extends Scene {
     super('Credits');
     this.creditsData = [
       {name: 'Jonathan BURON', role: 'Lead & developer', color: '#FF0000'},
-      {name: 'Simone BURON', role: 'Happyness manager', color: '#FF7F00'},
+      {name: 'Simone BURON', role: 'Happiness manager', color: '#FF7F00'},
       {name: 'Lucie BURON', role: 'Graphic artist', color: '#FFFF00'},
       {name: 'Margaux RIANT', role: 'Developer', color: '#00FF00'},
       {name: 'Mathis VALERIO', role: 'Sound designer & Compositor', color: '#0000FF'},
@@ -55,12 +55,12 @@ export default class Credits extends Scene {
       this.add.existing(text);
     });
 
+    this.events.once('shutdown', () => {
+      this.music.stop();
+    });
+
     const mainMenuButton = new Button(this, width / 2, (3 * height) / 4, 'main menu', []);
-    this.add.existing(mainMenuButton);
-    mainMenuButton.on('pointerup', () => {
-      this.events.once('shutdown', () => {
-        this.music.stop();
-      });
+    mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
   }
