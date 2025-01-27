@@ -1,4 +1,4 @@
-import {TextureKey} from '../../scenes/Preloader.ts';
+import {AudioKey, TextureKey} from '../../scenes/Preloader.ts';
 import ColorList from '../../domain/ColorList.ts';
 import Phaser from 'phaser';
 
@@ -82,6 +82,7 @@ export default class BubbleTea {
     if (this.drinkLevel <= 0) {
       return false;
     }
+    this.scene.sound.add(AudioKey.effects.sarbapaille_aspiration, {volume: 1}).play();
     const newLevel = Math.max(0, this.drinkLevel - .5);
     this.scene.tweens.add({
       targets: this.teaImage,
@@ -131,6 +132,7 @@ export default class BubbleTea {
     this.color = color;
     this.teaImage.setTint(this.color);
     if (this.drinkLevel < 1) {
+      this.scene.sound.add(AudioKey.effects.bubbletea_remplissage, {volume: .8}).play();
       this.scene.tweens.add({
         targets: this.teaImage,
         y: this.y,

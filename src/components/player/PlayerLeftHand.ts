@@ -1,4 +1,4 @@
-import {TextureKey} from '../../scenes/Preloader.ts';
+import {AudioKey, TextureKey} from '../../scenes/Preloader.ts';
 import BubbleTea from '../bubbletea/BubbleTea.ts';
 import PlayerCharacter from './PlayerCharacter.ts';
 
@@ -83,8 +83,9 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     const containerMatrix = this.sarbapailleImage.getWorldTransformMatrix();
     const originX = containerMatrix.tx;
     const originY = containerMatrix.ty;
-    if (worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
+    if (true || worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
       if (!this.currentBubbleTea || this.shotCounter <= 0) {
+        this.scene.sound.add(AudioKey.effects.sarbapaille_tir_a_blanc, {volume: 1}).play();
         this.updateGauge(true);
         return;
       }
@@ -92,11 +93,14 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
       this.updateGauge();
       const finalPower = this.shotPower;
       this.shotPower = 1;
+      this.scene.sound.add(AudioKey.effects.sarbapaille_tir, {volume: 1}).play();
 
       const ball = this.scene.add.circle(originX, originY, 5, this.shotColor).setDepth(1);
 
       const distance = Phaser.Math.Distance.Between(originX, originY, worldPoint.x, worldPoint.y);
       const duration = Phaser.Math.Clamp(distance * 2, 300, 1000);
+
+      const finalColor = this.shotColor;
 
       this.scene.tweens.add({
         targets: ball,
@@ -106,17 +110,9 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
         duration: duration,
         ease: 'Cubic.easeOut',
         onComplete: () => {
-          this.scene.tweens.add({
-            targets: ball,
-            scale: 5 * finalPower,
-            x: worldPoint.x - this.scene.scale.width / 2,
-            alpha: 0,
-            duration: 1000,
-            ease: 'Linear',
-            onComplete: () => {
-              ball.destroy();
-            },
-          });
+          this.scene.sound.add(AudioKey.effects.sarbapaille_tir_contact, {volume: 1}).play();
+          this.scene.input.emit('ColorableArea:receivedBubble', finalColor, finalPower, worldPoint.x, worldPoint.y);
+          ball.destroy();
         },
       });
     }

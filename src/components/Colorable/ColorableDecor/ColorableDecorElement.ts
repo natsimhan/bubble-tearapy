@@ -33,12 +33,11 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     const xLocal = (xWorld - this.getBounds().left) / this.getBounds().width * this.texture.get().width;
     const yLocal = (yWorld - this.getBounds().top) / this.getBounds().height * this.texture.get().height;
     const pixel = this.scene.textures.getPixelAlpha(xLocal, yLocal, this.#textureKey, 0);
-    return (pixel > 0);
+    return (pixel > 200);
   }
 
   receiveBubble(color: number, size: number, x: number, y: number): boolean {
     if (!this.#isElementFull) {
-      console.debug('size', size);
       this.#colorReceived.set(color, size * size + this.getCurrentSizeByColor(color));
       this.#isElementFull = this.checkElementFull();
       if (!this.#isElementFull) {
@@ -98,7 +97,7 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     for (let pixelX = 0; pixelX < this.texture.get().width; pixelX += xOffset) {
       for (let pixelY = 0; pixelY < this.texture.get().height; pixelY += yOffset) {
         const pixel = this.scene.textures.getPixelAlpha(pixelX, pixelY, this.#textureKey, 0);
-        if (pixel > 0) {
+        if (pixel > 200) {
           this.#pixelOccupationRatio += 0.01;
         }
       }

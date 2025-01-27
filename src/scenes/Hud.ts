@@ -1,131 +1,101 @@
 import {Scene} from 'phaser';
-import {TextureKey} from './Preloader.ts';
-
-const TIMMER_POSITION_X = 150;
-const TIMMER_POSITION_Y = 60;
-
-const BACKGROUND_PROGRESS_BAR_POSITION_X = 800;
-const BACKGROUND_PROGRESS_BAR_POSITION_Y = 70;
-
-const PROGRESS_BAR_POSITION_X = 750;
-const PROGRESS_BAR_POSITION_Y = 39;
-
-// background_gauge_0 : rouge #e32332
-// background_gauge_1 : Bleu  #8e17eb
-// background_gauge_2 : Vert  #2fe640
-// background_gauge_3 : Jaune #f8db1b
-// background_gauge_4 : Rose  #f649a8
+import {TextureKey, UiConfig} from './Preloader.ts';
+import ColorList from '../domain/ColorList.ts';
 
 const PROGRESS_BAR_BACKGROUND_COLORS = [
   {
-    color: 0xE32332,
-    asset: TextureKey.hud.progress_bar_background_red,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 7, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 3}
+    color: ColorList.h2n('#E32332'),
+    asset: TextureKey.hud.background_gauge_0,
   },
   {
-    color: 0x8E17EB,
-    asset: TextureKey.hud.progress_bar_background_blue,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 3, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6.4}
+    color: ColorList.h2n('#8e17eb'),
+    asset: TextureKey.hud.background_gauge_1,
   },
   {
-    color: 0x2FE640,
-    asset: TextureKey.hud.progress_bar_background_green,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 4}
+    color: ColorList.h2n('#2fe640'),
+    asset: TextureKey.hud.background_gauge_2,
   },
   {
-    color: 0xF649A8,
-    asset: TextureKey.hud.progress_bar_background_pink,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 8, y: BACKGROUND_PROGRESS_BAR_POSITION_Y - 6}
+    color: ColorList.h2n('#f8db1b'),
+    asset: TextureKey.hud.background_gauge_3,
   },
   {
-    color: 0xF8DB1B,
-    asset: TextureKey.hud.progress_bar_background_yellow,
-    position: {x: BACKGROUND_PROGRESS_BAR_POSITION_X + 11, y: BACKGROUND_PROGRESS_BAR_POSITION_Y}
+    color: ColorList.h2n('#f649a8'),
+    asset: TextureKey.hud.background_gauge_4,
   }
 ];
 
-const TIMER_BACKGROUNDS = [
-  {time: 0, asset: TextureKey.hud.timer_background_pink},
-  {time: 30, asset: TextureKey.hud.timer_background_purple},
-  {time: 60, asset: TextureKey.hud.timer_background_blue}
-];
-
 export class Hud extends Scene {
-  timerText: Phaser.GameObjects.Text;
-  progressBar: Phaser.GameObjects.Graphics;
-  progressBarBackground: Phaser.GameObjects.Sprite;
-  timerBackground: Phaser.GameObjects.Sprite;
+  private timerText: Phaser.GameObjects.Text;
+  private progressBar: Phaser.GameObjects.Graphics;
+  private progressBarBackground: Phaser.GameObjects.Sprite;
+  private timerBackground: Phaser.GameObjects.Sprite;
 
-  startTime: number = 0;
-  progress: number = 0;
-  currentTimerAsset: string;
+  private startTime: number = 0;
+  private progress: number = 0;
 
   constructor() {
-    super('Hud');
+    super({key: 'Hud', active: false});
   }
 
   create() {
     this.timerBackground = this.add.sprite(
-        TIMMER_POSITION_X,
-        TIMMER_POSITION_Y,
-        TIMER_BACKGROUNDS[0].asset
+        this.scale.width * .1,
+        this.scale.height * .1,
+        TextureKey.hud.timer_background_pink
     );
-    this.timerBackground.setScale(0.2);
+    this.timerBackground.setScale(this.scale.height / 6 / this.timerBackground.displayHeight);
     this.timerBackground.setOrigin(0.5, 0.5);
-    this.currentTimerAsset = TIMER_BACKGROUNDS[0].asset;
+
+    const timerBounds = this.timerBackground.getBounds();
 
     this.timerText = this.add.text(
-        TIMMER_POSITION_X,
-        TIMMER_POSITION_Y,
+        timerBounds.centerX,
+        timerBounds.centerY,
         '00:00',
         {
-          fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+          fontFamily: UiConfig.fontFamily, fontSize: 80, color: '#ffffff',
           stroke: '#000000', strokeThickness: 8,
           align: 'center'
         }
     );
-    this.timerText.setOrigin(0.5, 0.5);
-
-    this.progressBarBackground = this.add.sprite(
-        BACKGROUND_PROGRESS_BAR_POSITION_X,
-        BACKGROUND_PROGRESS_BAR_POSITION_Y,
-        PROGRESS_BAR_BACKGROUND_COLORS[0].asset
-    );
-    this.progressBarBackground.setScale(0.3);
-    this.progressBarBackground.setOrigin(0.5, 0.5);
+    this.timerText.setOrigin(0.5, 0.5).setScale(timerBounds.height / this.timerText.displayHeight * .4);
 
     this.progressBar = this.add.graphics();
-    this.progressBar.fillStyle(PROGRESS_BAR_BACKGROUND_COLORS[0].color, 1);
-    this.updateProgressBar();
+
+    this.progressBarBackground = this.add.sprite(
+        this.scale.width * .85,
+        this.scale.height * .1,
+        PROGRESS_BAR_BACKGROUND_COLORS[0].asset
+    );
+    this.progressBarBackground.setScale(0.4);
+    this.progressBarBackground.setOrigin(0.5);
 
 
-    this.startTime = this.time.now;
-    this.progress = 0
-    ;
+    this.startTime = Date.now();
+    this.progress = 0;
     this.updateProgressBar();
+
+    // Pour debug la progress bar sur 30s
+    // this.tweens.addCounter({
+    //   from: 0,
+    //   to: 100,
+    //   duration: 10_000,
+    //   ease: 'Linear',
+    //   onUpdate: (tween) => {
+    //     const p = tween.getValue() / 100;
+    //     this.updateProgress(p);
+    //   },
+    // })
   }
 
   update(time: number) {
-    const elapsedTime = Math.floor((time - this.startTime) / 1000);
+    const elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
 
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     this.timerText.setText(formattedTime);
-
-    this.updateTimerBackground(elapsedTime);
-  }
-
-  updateTimerBackground(elapsedTime: number) {
-    const timerData = TIMER_BACKGROUNDS.find((data, index) => {
-      const nextData = TIMER_BACKGROUNDS[index + 1];
-      return elapsedTime >= data.time && (!nextData || elapsedTime < nextData.time);
-    }) || TIMER_BACKGROUNDS[0];
-
-    if (this.currentTimerAsset !== timerData.asset) {
-      this.currentTimerAsset = timerData.asset;
-      this.timerBackground.setTexture(timerData.asset);
-    }
   }
 
   updateProgressBar() {
@@ -136,27 +106,25 @@ export class Hud extends Scene {
     const progressData = PROGRESS_BAR_BACKGROUND_COLORS[index];
 
     // Mettre à jour la texture et les positions spécifiques
-    this.progressBar.fillStyle(progressData.color, 1);
     this.progressBarBackground.setTexture(progressData.asset);
-    this.progressBarBackground.setPosition(
-        progressData.position.x,
-        progressData.position.y
-    );
 
     // Dessiner la barre de progression si nécessaire
     if (this.progress > 0) {
+      const pBgBounds = this.progressBarBackground.getBounds();
+
+      this.progressBar.fillStyle(progressData.color, 1);
       this.progressBar.fillRoundedRect(
-          PROGRESS_BAR_POSITION_X,
-          PROGRESS_BAR_POSITION_Y,
-          this.progress * 225,
-          39,
+          pBgBounds.left + pBgBounds.width * .25,
+          pBgBounds.top + pBgBounds.height * .4,
+          pBgBounds.width * .6 * this.progress,
+          pBgBounds.height * .2,
           10
       );
     }
   }
 
-  updateProgress(amount: number) {
-    this.progress = Phaser.Math.Clamp(this.progress + amount, 0, 1);
+  public updateProgressToVictory(percentVictory: number) {
+    this.progress = Phaser.Math.Clamp(percentVictory, 0.1, 1);
     this.updateProgressBar();
   }
 

@@ -1,5 +1,6 @@
 import {Scene, Sound} from 'phaser';
 import Button from '../components/Button.ts';
+import {AudioKey, UiConfig} from './Preloader.ts';
 
 interface ScoreType {
   name: string,
@@ -12,44 +13,48 @@ export default class Leaderboard extends Scene {
 
   private width: number;
   private height: number;
+  public timer: number = 0;
+  private bestScoreText: Phaser.GameObjects.Text;
 
   constructor() {
     super('Leaderboard');
   }
 
-  preload() {
-    this.load.audio('cinematic_opening', 'music/cinematic_opening.ogg');
+  init(data: { timer: number; }): void {
+    console.debug(data);
+    this.timer = data?.timer || 0;
   }
 
   create() {
+    this.add.image(this.scale.width / 2, this.scale.height / 2, 'bg_end');
+
     this.width = this.scale.width;
     this.height = this.scale.height;
 
-    this.music = this.sound.add('cinematic_opening', {loop: true, volume: 0.5});
+    this.music = this.sound.add(AudioKey.musics.theme_credits, {loop: true, volume: 0.3});
     this.music.play();
 
-    const randomTime = this.registry.get('timer');
+    this.bestScoreText = this.add.text(this.scale.width / 2, this.scale.height / 4, 'You\'re in the top 10 !', {
+      fontFamily: UiConfig.fontFamily, fontSize: 100, color: '#ffffff',
+      stroke: '#000000', strokeThickness: 8,
+      align: 'center'
+    });
+    this.bestScoreText.setOrigin(0.5);
+    this.bestScoreText.setVisible(false);
 
     this.events.once('shutdown', () => {
       this.music.stop();
     });
-
-    if (this.isInTop10(randomTime)) {
-      this.promptForName((name: string) => {
-        this.saveScoreToLeaderboard(name, randomTime);
-      });
+    if (this.timer && this.isInTop10(this.timer)) {
+      this.promptForName();
     } else {
       this.displayLeaderboard();
     }
 
   }
 
-  saveScoreToLeaderboard(name: string, timeInMs: number) {
-    this.saveScore(name, timeInMs);
-  }
-
   displayLeaderboard(): void {
-    const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []);
+    const mainMenuButton = new Button(this, this.width / 2, (9 * this.height) / 10, 'main menu', []).setScale(.8);
     mainMenuButton.onClickButton('pointerup', () => {
       this.scene.start('MainMenu');
     });
@@ -57,14 +62,20 @@ export default class Leaderboard extends Scene {
     const scores: ScoreType[] = this.loadScores();
 
     const title = this.add.text(this.width / 2, (this.height) / 10, 'Leaderboard', {
-      fontFamily: 'Arial', fontSize: 32, color: '#ffffff', align: 'center'
+      fontFamily: UiConfig.fontFamily, fontSize: 100, color: '#ffffff',
+      stroke: '#000000', strokeThickness: 8,
+      align: 'center'
     }).setOrigin(0.5, 0);
     this.add.existing(title);
 
+    let topY = title.getBounds().bottom * 1.2;
+
     scores.forEach((score, index) => {
-      const rankText = this.add.text(this.width / 2, title.y * 2 + index * 40, `${index + 1}. ${score.name} - ${this.formatTime(score.timeInSec)}`, {
-        fontFamily: 'Arial', fontSize: 24, color: '#ffffff'
+      const rankText = this.add.text(this.width / 2, topY, `${index + 1}. ${score.name} - ${this.formatTime(score.timeInSec)}`, {
+        fontFamily: UiConfig.fontFamily, fontSize: 35, color: '#ffffff',
+        stroke: '#000000', strokeThickness: 8,
       }).setOrigin(0.5, 0);
+      topY += rankText.getBounds().height * 1.2;
       this.add.existing(rankText);
     });
   }
@@ -77,10 +88,10 @@ export default class Leaderboard extends Scene {
     return [];
   }
 
-  saveScore(name: string, timeInSec: number): void {
+  saveScore(name: string): void {
     const scores = this.loadScores();
-    if (scores.length < 10 || timeInSec < scores[scores.length - 1].timeInSec) {
-      scores.push({name, timeInSec: timeInSec});
+    if (scores.length < 10 || this.timer < scores[scores.length - 1].timeInSec) {
+      scores.push({name, timeInSec: this.timer});
       scores.sort((a, b) => a.timeInSec - b.timeInSec);
       if (scores.length > 10) {
         scores.pop();
@@ -101,40 +112,62 @@ export default class Leaderboard extends Scene {
     return scores.length < 10 || timeInSec < scores[scores.length - 1].timeInSec;
   }
 
-  promptForName(callback: (name: string) => void) {
+  promptForName() {
     //todo A voir pour peux etre enregistré le player session car du coup a chque fois il va redemander de mettre un pseudo
-
-    const width = this.scale.width;
-    const height = this.scale.height;
+    this.bestScoreText.setVisible(true);
+    this.sound.add(AudioKey.effects.nouveau_record, {volume: 1}).play();
 
     // Créer un input DOM temporaire
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Your name';
-    input.style.position = 'absolute';
-    input.style.left = `${(width) / 2}px`; // Centrer horizontalement
-    input.style.top = `${(2 * height) / 5}px`; // Position verticale
-    input.style.zIndex = String(10);
-    document.body.appendChild(input);
+    const div = document.createElement("div");
+    div.id = "centered-block";
+    div.innerHTML = `
+      <div style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+      ">
+        <input id="centered-input" type="text" style="
+          padding: 10px;
+          font-size: 32px;
+          font-family: ${UiConfig.fontFamily};
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          outline: none;
+        " placeholder="Your name...">
+      </div>
+    `;
+    document.body.appendChild(div);
+    setTimeout(() => document.getElementById("centered-input")?.focus(), 300);
 
     // Créer les boutons
-    const submitButton = new Button(this, (width) / 2, (2 * height) / 3.5, 'Submit', []);
-
-    const skipButton = new Button(this, (width) / 2, (2 * height) / 2.5, 'Continue without submitting', []);
+    const submitButton = new Button(this, this.scale.width / 2, this.scale.height * .75, 'Submit', []);
 
     submitButton.onClickButton('pointerup', () => {
-      const enteredName = input.value.trim() || 'Player';
-      callback(enteredName);
-      input.remove(); // Retirer l'input DOM
-      submitButton.setVisible(false);
-      skipButton.setVisible(false);
+      this.submitForm(submitButton);
     });
 
-    skipButton.onClickButton('pointerup', () => {
-      this.displayLeaderboard();
-      input.remove(); // Retirer l'input DOM
-      submitButton.setVisible(false);
-      skipButton.setVisible(false);
+    this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
+      if (event.code === 'Enter') {
+        this.submitForm(submitButton);
+      }
     });
+  }
+
+  private submitForm(submitButton: Button) {
+    const input = document.getElementById("centered-input");
+    const enteredName = (input ? input.value.trim() : null) || 'Player';
+    // Retirer l'input DOM
+    const div = document.getElementById("centered-block");
+    if (div) {
+      div.remove();
+    }
+    submitButton.setVisible(false);
+    this.bestScoreText.setVisible(false);
+    this.saveScore(enteredName);
   }
 }

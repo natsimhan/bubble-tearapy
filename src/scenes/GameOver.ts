@@ -1,46 +1,45 @@
 import {Scene} from 'phaser';
+import {AudioKey, UiConfig} from './Preloader.ts';
 
 export class GameOver extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   gameover_text: Phaser.GameObjects.Text;
-  public timer!: number;
+  public timer: number = 0;
 
   constructor() {
     super('GameOver');
   }
 
-  init(data: { timer: any; }): void {
-    this.timer = data.timer;
+  init(data: { timer: number; }): void {
+    this.timer = data?.timer || 0;
   }
 
   create() {
-    this.camera = this.cameras.main
-    this.camera.setBackgroundColor(0xff0000);
+    this.add.image(this.scale.width / 2, this.scale.height / 2, 'bg_end');
 
-    // todo temporaire le temps de la fusion avec les autres branche et de la connetion au vrai timer
-    this.registry.set('timer', this.generateRandomTime());
+    const music = this.sound.add(AudioKey.musics.cinematique_de_fin, {loop: true, volume: 0.5});
+    music.play();
+    this.events.once('shutdown', () => {
+      music.stop();
+    });
 
-    this.background = this.add.image(512, 384, 'background');
-    this.background.setAlpha(0.5);
+    const minutes = Math.floor(this.timer / 60);
+    const seconds = this.timer % 60;
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    this.gameover_text = this.add.text(512, 384, 'Game Over', {
-      fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
+
+    this.gameover_text = this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win !' + '\n' + formattedTime, {
+      fontFamily: UiConfig.fontFamily, fontSize: 100, color: '#ffffff',
       stroke: '#000000', strokeThickness: 8,
       align: 'center'
     });
     this.gameover_text.setOrigin(0.5);
 
-    this.input.once('pointerup', () => {
-          this.scene.start('Leaderboard');
-    });
-  }
-
-  // todo temporaire le temps de la fusion avec les autres branche et de la connetion au vrai timer
-  generateRandomTime(): number {
-    const minTime = 5;
-    const maxTime = 3000;
-    // const maxTime = 6;
-    return Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+    setTimeout(() => {
+      this.input.once('pointerup', () => {
+        this.scene.start('Leaderboard', {timer: this.timer});
+      });
+    }, 2000);
   }
 }

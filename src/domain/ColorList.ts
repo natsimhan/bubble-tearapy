@@ -16,6 +16,10 @@ const COLOR_LIST = [
 
 export default class ColorList {
 
+  public static h2n(hex: string): number {
+    return h2n(hex);
+  }
+
   public static getRandomColor(): number {
     return COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)];
   }
