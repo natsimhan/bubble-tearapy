@@ -1,9 +1,9 @@
 {
-    "name": "bubbletearapy",
+    "name": "bubble-tearapy",
     "description": "Bring color and joy to a gray, lifeless world.",
     "version": "1.0.0",
     "author": "Ouebsson GGJ25 <bonjour@ouebsson.fr> (https://studio.ouebsson.fr/)",
-    "license": "CC BY-NC-SA 4.0",
+    "license": "CC-BY-NC-SA-4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
     "scripts": {
         "dev": "vite --config vite/config.dev.mjs",

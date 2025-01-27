@@ -25,7 +25,7 @@ export class Game extends Scene {
     // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
     // this.rng = new Rng('c53b9c667f'); // le seed des chèvres :)
     // this.rng = new Rng('fece8633d4'); // 2 arbres + 3 buissons
-    this.rng = new Rng('fece8633d4');
+    this.rng = new Rng();
 
     this.speed = MINIMAL_SPEED;
     this.speedLastSlower = 0;
