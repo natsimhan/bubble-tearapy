@@ -1,29 +1,29 @@
 import {Scene} from 'phaser';
 
 export const UiConfig = {
-  fontFamily: '"DynaPuff", serif',
+  fontFamily: 'DynaPuff, serif',
 };
 
 export const AudioKey = {
   effects: {
-    bubbletea_remplissage: 'remplissage_bubble_tea', // bubbletea new color
-    button_hover: 'hover', // hover d'un bouton
-    button_clic: 'interaction', // clic boutton
-    nouveau_record: 'nouveau_record', // input du pseudo sur leaderboard
-    pnj_confus_1: 'pnj_confus_1',
-    pnj_confus_2: 'pnj_confus_2',
-    pnj_heureux_1: 'pnj_heureux_1',
-    pnj_heureux_2: 'pnj_heureux_2',
-    pnj_triste_1: 'pnj_triste_1',
-    pnj_triste_2: 'pnj_triste_2',
-    sarbapaille_aspiration: 'aspiration', // remplit la sarbapaille
-    sarbapaille_tir: 'tir',
-    sarbapaille_tir_a_blanc: 'tir_a_blanc',
-    sarbapaille_tir_contact: 'contact_tir',
-    sauvetage_pnj_1: 'sauvetage_pnj_1',
-    sauvetage_pnj_2: 'sauvetage_pnj_2',
-    velo_normal: 'velo_normal', // boucle continue
-    velo_rapide: 'velo_rapide', // ==> spacebar
+bubbletea_remplissage: 'remplissage_bubble_tea', // bubbletea new color
+button_hover: 'hover', // hover d'un bouton
+button_clic: 'interaction', // clic boutton
+nouveau_record: 'nouveau_record', // input du pseudo sur leaderboard
+     pnj_confus_1: 'pnj_confus_1',
+     pnj_confus_2: 'pnj_confus_2',
+pnj_heureux_1: 'pnj_heureux_1',
+pnj_heureux_2: 'pnj_heureux_2',
+     pnj_triste_1: 'pnj_triste_1',
+     pnj_triste_2: 'pnj_triste_2',
+sarbapaille_aspiration: 'aspiration', // remplit la sarbapaille
+sarbapaille_tir: 'tir',
+sarbapaille_tir_a_blanc: 'tir_a_blanc',
+sarbapaille_tir_contact: 'contact_tir',
+     sauvetage_pnj_1: 'sauvetage_pnj_1',
+     sauvetage_pnj_2: 'sauvetage_pnj_2',
+velo_normal: 'velo_normal', // boucle continue
+velo_rapide: 'velo_rapide', // ==> spacebar
   },
   musics: {
     cinematic_opening: 'cinematic_opening',
@@ -37,6 +37,13 @@ export const AudioKey = {
 export const TextureKey = {
   ui: {
     button_blue: 'button_blue',
+  },
+  intro: {
+    screen_1: '1',
+    screen_2: '2',
+    screen_3: '3',
+    screen_4: '4',
+    screen_5: '5',
   },
   bubbletea: {
     bubbletea: 'bubbletea',
@@ -196,11 +203,12 @@ export class Preloader extends Scene {
     this.preloadPlayer();
     this.preloadUi();
     this.preloadPNJ();
+    this.preloadIntro();
   }
 
   create() {
-    // this.scene.start('MainMenu'); // todo P0 !!!!!!!!!!!
-    this.scene.start('Game');
+    this.scene.start('Intro'); // todo P0 !!!!!!!!!!!
+    // this.scene.start('Game');
   }
 
   private preloadPlayer() {
@@ -335,9 +343,19 @@ export class Preloader extends Scene {
     ], 'pnj')
   }
 
-  private preloadFromListKey(listKey: string[], subpath: string) {
+  private preloadIntro() {
+    this.preloadFromListKey([
+        TextureKey.intro.screen_1,
+        TextureKey.intro.screen_2,
+        TextureKey.intro.screen_3,
+        TextureKey.intro.screen_4,
+        TextureKey.intro.screen_5,
+    ], 'intro', '.jpg')
+  }
+
+  private preloadFromListKey(listKey: string[], subpath: string, extension: string = '.png') {
     for (const imgKey of listKey) {
-      this.load.image(imgKey, `${subpath}/${imgKey}.png`);
+      this.load.image(imgKey, `${subpath}/${imgKey}${extension}`);
     }
   }
 

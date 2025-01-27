@@ -35,7 +35,7 @@ export default class Credits extends Scene {
     const width = this.scale.width;
     const height = this.scale.height;
 
-    this.music = this.sound.add(AudioKey.musics.theme_credits, {loop: true, volume: 0.1});
+    this.music = this.sound.add(AudioKey.musics.cinematique_de_fin, {loop: true, volume: 0.5});
     this.music.play();
 
     this.creditsData.map((credit: CreditsDataType, index: number) => {

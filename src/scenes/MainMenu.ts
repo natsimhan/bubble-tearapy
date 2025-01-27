@@ -32,7 +32,7 @@ export class MainMenu extends Scene {
       this.scene.start('Game');
     });
     leaderBoardButton.onClickButton('pointerup', () => {
-      this.scene.start('Leaderboard');
+      this.scene.start('Leaderboard', {timer: null});
     });
     creditsButton.onClickButton('pointerup', () => {
       this.scene.start('Credits');

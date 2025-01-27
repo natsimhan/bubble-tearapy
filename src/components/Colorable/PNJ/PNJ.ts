@@ -1,4 +1,4 @@
-import {TextureKey} from '../../../scenes/Preloader.ts';
+import {AudioKey, TextureKey} from '../../../scenes/Preloader.ts';
 
 
 export default class PNJ {
@@ -29,6 +29,7 @@ export default class PNJ {
   }
 
   switchToHappy() {
+    this.#scene.sound.add(Math.random()>0.5 ? AudioKey.effects.pnj_heureux_1 : AudioKey.effects.pnj_heureux_2, {volume: 1}).play();
     this.#pnjImage.destroy();
     this.#pnjImage = this.#scene.add.image(this.#x, this.#y, TextureKey.pnj.pnj_heureux_1);
     this.#pnjImage.setScale(this.#targetWidth / this.#pnjImage.width, this.#targetHeight / this.#pnjImage.height);

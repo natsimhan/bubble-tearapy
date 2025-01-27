@@ -1,4 +1,4 @@
-import {TextureKey} from '../../scenes/Preloader.ts';
+import {AudioKey, TextureKey} from '../../scenes/Preloader.ts';
 import BubbleTea from '../bubbletea/BubbleTea.ts';
 import PlayerCharacter from './PlayerCharacter.ts';
 
@@ -85,6 +85,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     const originY = containerMatrix.ty;
     if (true || worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
       if (!this.currentBubbleTea || this.shotCounter <= 0) {
+        this.scene.sound.add(AudioKey.effects.sarbapaille_tir_a_blanc, {volume: 1}).play();
         this.updateGauge(true);
         return;
       }
@@ -92,6 +93,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
       this.updateGauge();
       const finalPower = this.shotPower;
       this.shotPower = 1;
+      this.scene.sound.add(AudioKey.effects.sarbapaille_tir, {volume: 1}).play();
 
       const ball = this.scene.add.circle(originX, originY, 5, this.shotColor).setDepth(1);
 
@@ -108,6 +110,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
         duration: duration,
         ease: 'Cubic.easeOut',
         onComplete: () => {
+          this.scene.sound.add(AudioKey.effects.sarbapaille_tir_contact, {volume: 1}).play();
           this.scene.input.emit('ColorableArea:receivedBubble', finalColor, finalPower, worldPoint.x, worldPoint.y);
           ball.destroy();
         },
