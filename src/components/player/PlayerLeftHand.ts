@@ -83,7 +83,7 @@ export default class PlayerLeftHand extends Phaser.GameObjects.Container {
     const containerMatrix = this.sarbapailleImage.getWorldTransformMatrix();
     const originX = containerMatrix.tx;
     const originY = containerMatrix.ty;
-    if (true || worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
+    if (worldPoint.x > this.playerCharacter.getPlayerImageBounds().right) {
       if (!this.currentBubbleTea || this.shotCounter <= 0) {
         this.scene.sound.add(AudioKey.effects.sarbapaille_tir_a_blanc, {volume: 1}).play();
         this.updateGauge(true);

@@ -34,9 +34,11 @@ export default class Parallax {
       ).setOrigin(.5, 1).setDepth(-1_000_000 + (++depthOffset));
       this.backgroundList.push(bg);
     }
+      this.backgroundList[4].setDepth(0);
   }
 
   update(speed: number): void {
+    speed = speed /4/4/4;
     let velocity = speed;
     for (const bg of this.backgroundList) {
       bg.tilePositionX += velocity;

@@ -1,9 +1,8 @@
 import {AudioKey, TextureKey} from '../../../scenes/Preloader.ts';
 
-
 export default class PNJ {
 
-  #pnjImage;
+  #pnjImage:Phaser.GameObjects.Image;
   #scene;
   #x;
   #y;
@@ -12,7 +11,9 @@ export default class PNJ {
   #walkingZoneMin: number;
   #walkingZoneMax: number;
   #depth;
-  isBackward: boolean;
+  private direction: number = -1;
+  private speed = 2;
+  private refX : number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, minX: number, maxX: number) {
     this.#scene = scene;
@@ -21,8 +22,9 @@ export default class PNJ {
     this.#depth = 0;
     this.#targetWidth = scene.scale.width/10;
     this.#targetHeight = scene.scale.height/3;
-    this.#walkingZoneMin = minX;
-    this.#walkingZoneMax = maxX;
+    this.#walkingZoneMin = x - minX;
+    this.#walkingZoneMax = maxX - x;
+    this.refX = x;
     this.#pnjImage = this.#scene.add.image(x, y, TextureKey.pnj.pnj_triste_1);
     this.#pnjImage.setScale(this.#targetWidth / this.#pnjImage.width, this.#targetHeight / this.#pnjImage.height);
     this.#pnjImage.setOrigin(0.5, 1);
@@ -40,5 +42,29 @@ export default class PNJ {
   setDepth(depth: number) {
     this.#depth = depth;
     this.#pnjImage.setDepth((depth));
+  }
+
+  public update(worldshift: number, worldWidth: number): void {
+    if(this.#pnjImage && this.#pnjImage.visible) {
+      this.refX += worldshift;
+
+      this.#pnjImage.x += (this.speed * (this.direction>0 ? .25 : 2)) * this.direction;
+
+      const imgW = this.#pnjImage.displayWidth + 1;
+      if(this.#pnjImage.x < -imgW) {
+        this.#pnjImage.x += worldWidth;
+        this.refX += worldWidth;
+      }
+
+      if (this.#pnjImage.x >= this.refX + this.#walkingZoneMax) {
+        this.#pnjImage.x = this.refX + this.#walkingZoneMax;
+        this.direction = -1;
+        this.#pnjImage.setFlipX(false);
+      } else if (this.#pnjImage.x <= this.refX + this.#walkingZoneMin) {
+        this.#pnjImage.x = this.refX + this.#walkingZoneMin;
+        this.direction = 1;
+        this.#pnjImage.setFlipX(true);
+      }
+    }
   }
 }

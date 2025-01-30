@@ -55,6 +55,10 @@ export default class ColorableDecorElement extends Phaser.GameObjects.Image {
     return false;
   }
 
+  public getChild():Phaser.GameObjects.Image[] {
+    return [this, ...this.#splashList];
+  }
+
   getCurrentSizeByColor(color: number): number {
     const currentColorSize = this.#colorReceived.get(color);
     if (currentColorSize) {

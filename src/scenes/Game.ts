@@ -5,8 +5,9 @@ import Parallax from '../components/Parallax.ts';
 import PlayerWithBubbleTeas from '../components/player/PlayerWithBubbleTeas.ts';
 import {AudioKey, TextureKey} from './Preloader.ts';
 import {Hud} from './Hud.ts';
+import WorldContainer from '../components/WorldContainer.ts';
 
-const MINIMAL_SPEED = 0.05;
+const MINIMAL_SPEED = 2;
 
 export class Game extends Scene {
   private rng: Rng;
@@ -15,6 +16,7 @@ export class Game extends Scene {
   private parallax: Parallax;
   private areaTest: ColorableArea;
   private startTime: number
+  private worldContainer:WorldContainer;
 
   private speed: number;
   private speedLastSlower: number;
@@ -22,9 +24,6 @@ export class Game extends Scene {
 
   constructor() {
     super('Game');
-    // this.rng = new Rng('97a605a1b9'); // seed 8 batiments
-    // this.rng = new Rng('c53b9c667f'); // le seed des chèvres :)
-    // this.rng = new Rng('fece8633d4'); // 2 arbres + 3 buissons
     this.rng = new Rng();
 
     this.speed = MINIMAL_SPEED;
@@ -53,7 +52,7 @@ export class Game extends Scene {
     const player = new PlayerWithBubbleTeas(this, this.scale.width * 0.1, this.scale.height - roadHeight / 4);
     player.setHeight(this.scale.height * .5);
 
-    this.areaTest = new ColorableArea(this, this.scale.width * 0.0001, this.scale.height * .95, -10, this.rng);
+    this.worldContainer = new WorldContainer(this,0, this.rng);
 
     this.input.on('Hud:updateProgressBar', (percentVictory: number) => {
       const hudScene = this.scene.get('Hud') as Hud;
@@ -104,6 +103,7 @@ export class Game extends Scene {
       this.speedLastSlower = time;
     }
     this.parallax.update(this.speed);
+    this.worldContainer.update(this.speed);
   }
 
   private gameOver(timerSec: number): void {

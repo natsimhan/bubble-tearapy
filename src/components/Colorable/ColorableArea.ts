@@ -90,6 +90,10 @@ export default class ColorableArea {
     });
   }
 
+  public getChild():(ColorableDecor|PNJ)[] {
+    return [...this.#colorableDecorList, ...this.#pnjList];
+  }
+
   generatePNJList() {
     this.#pnjNb = this.#rng.between(1, PNJ_MAX);
     const leftBound = this.#x - this.#width / 2;
@@ -166,7 +170,6 @@ export default class ColorableArea {
         break;
       }
     }
-    console.debug('????');
     this.#scene.input.emit('Hud:updateProgressBar', this.getAreaScore());
   }
 

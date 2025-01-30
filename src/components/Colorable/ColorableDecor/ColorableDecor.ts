@@ -26,6 +26,13 @@ export default class ColorableDecor {
         this.createElementBorder();
     }
 
+  public getChild():ColorableDecorElement[] {
+      if(this.elementBorder) {
+        return [...this.elementList, this.elementBorder];
+      }
+      return this.elementList;
+  }
+
     createElementList(): void {
       this.elementList = [];
     }

@@ -21,7 +21,6 @@ export default class Leaderboard extends Scene {
   }
 
   init(data: { timer: number; }): void {
-    console.debug(data);
     this.timer = data?.timer || 0;
   }
 

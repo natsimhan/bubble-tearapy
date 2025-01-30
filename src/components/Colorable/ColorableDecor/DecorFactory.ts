@@ -27,7 +27,6 @@ export const DecorKey = {
 
 export default class DecorFactory {
   public createDecor(scene: Phaser.Scene, x: number, y: number, height: number, width: number, key: string) {
-    console.debug('key', key);
     switch (key) {
       case DecorKey.building: {
         return new ColorableBuilding(scene, x, y, height, width);
@@ -63,7 +62,6 @@ export default class DecorFactory {
         return new ColorableTree2(scene, x, y, height, width);
       }
       default: {
-        console.debug('in default');
         return new ColorableDecor(scene, x, y, height, width);
       }
     }

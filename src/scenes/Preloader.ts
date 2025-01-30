@@ -207,8 +207,7 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.scene.start('Intro'); // todo P0 !!!!!!!!!!!
-    // this.scene.start('Game');
+    this.scene.start('Intro');
   }
 
   private preloadPlayer() {
